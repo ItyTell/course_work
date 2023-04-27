@@ -1,0 +1,202 @@
+\chapter{SIR модель}
+Є декілька найбільш розповсюджених математичних моделей для моделювання епідемій (та загалом інфекційних захворювань).
+Спочатку розглянемо найрозповсюджені з них, а вже в другому розділі
+створимо свою модель для COVID-19.
+
+\section{SIR модель}
+\par Одною з найпростіших моделей є SIR модель. 
+В ній всі люди розглядаються у вигляді трьох груп: здорові (susceptible), хворі (infectious) та ті, що одужали (removed). 
+Форсування людей між цими групами відбувається зі здорових у хворі 
+і з хворих до одужаних.(див рис. \ref{SIR graph})  
+
+\vspace{1cm}
+\begin{risunok}[ht]
+    \centering
+    \begin{tikzpicture}
+        \node
+        [style={rectangle, draw=green!60, fill=green!5, very thick}]
+        (Susceptible){Susceptible}; 
+        \node
+        [style={rectangle, draw=red!60, fill=red!5, very thick}]
+        (Infectious)[right=of Susceptible]{Infectious};
+        \node
+        [style={rectangle, draw=blue!60, fill=blue!5, very thick}]
+        (Removed)[right=of Infectious]{Removed};
+        \draw[->, style={very thick}] (Susceptible.east)
+        to node[above] {$ \frac{\beta}{N} $} (Infectious.west);
+        \draw[->, style={very thick}] (Infectious.east)
+        to node[above] {$  \gamma $} (Removed.west);
+    \end{tikzpicture}
+    \vspace{0.5cm}
+    \caption{SIR model}
+    \label{SIR graph}
+\end{risunok}
+
+Зв’язок між цими групами записують за допомогою системи диференціальних рівняннь (див рівняння \ref{SIR}).
+
+\begin{equation}
+    \begin{cases}
+        \frac{dS}{dt} = - \frac{\beta}{N}SI          \\
+        \frac{dI}{dt} = \frac{\beta}{N}SI - \gamma I \\
+        \frac{dR}{dt} = \gamma I
+    \end{cases}
+\end{equation}
+\label{SIR}
+
+
+Перше рівняння описує,
+що кількість здорових зменшується на величину 
+пропорційну добутку хворих на здорових - кількість можливих контактів. 
+Друге рівняння показує, що кількість хворих зростає на ту саму величну і зменшується на величину пропорційну до кількості хворих (кількість одужаних). 
+Третє рівняння зібльшується на ту саму кількість одужаних\cite{salimipour_sir_2023}.
+\par 
+Додавши всі рівняння системи отримаємо - $ \frac{dS}{dt} + \frac{dI}{dt} + \frac{dR}{dt} = 0 $. 
+Тож населення у нашій моделі не змінюєтся з часом: $N = S + I + R = const$.
+
+
+\section{SEIR модель}
+
+Часто хвороба характеризується не лише станами - хворий, здоровий, перехворівший.
+Для подібних випадків додають додаткові стани.
+Наприклад, якщо додати у SIR модель ще одну групу «заражені, але ще не взмозі інфікувати інших» то вийде SEIR модель. 
+Тоді у порівнянні з SIR моделлю у схему додасться проміжний етап. (див рис. \ref{SIER graph})
+
+\begin{risunok}[ht]
+    \centering
+    \begin{tikzpicture}
+        \node
+        [style={rectangle, draw=green!60, fill=green!5, very thick}]
+        (Susceptible){Susceptible};
+        \node
+        [style={rectangle, draw=yellow!60, fill=yellow!5, very thick}]
+        (Exposed)[right=of Susceptible]{Exposed};
+        \node
+        [style={rectangle, draw=red!60, fill=red!5, very thick}]
+        (Infectious)[right=of Exposed]{Infectious};
+        \node
+        [style={rectangle, draw=blue!60, fill=blue!5, very thick}]
+        (Removed)[right=of Infectious]{Removed};
+        \draw[->, style={very thick}] (Susceptible.east)
+        to node[above] {$ \frac{\beta}{N} $} (Exposed.west);
+        \draw[->, style={very thick}] (Exposed.east)
+        to node[above] {$ a $} (Infectious.west);
+        \draw[->, style={very thick}] (Infectious.east)
+        to node[above] {$  \gamma $} (Removed.west);
+    \end{tikzpicture}
+    \vspace{0.5cm}
+    \caption{Схема роботи SIER моделі}
+    \label{SIER graph}
+\end{risunok}
+
+У вихідну систему додається додаткове рівняння (див рівняння \ref{SEIR})
+
+\begin{equation}
+    \begin{cases}
+        \frac{dS}{dt} = - \frac{\beta}{N}SI    \\
+        \frac{dE}{dt} = \frac{\beta}{N}SI - aE \\
+        \frac{dI}{dt} = aE - \gamma I          \\
+        \frac{dR}{dt} = \gamma I
+    \end{cases}
+\end{equation}
+\label{SEIR}
+
+E(t) функція кількості заражених, коефіцієнт а відповідає оберненому середньому періоду переходу людини від зараженої, до повноцінного інфікованого.
+Так само населення залишається незмінним: $ N = S + E + I + R $.
+
+Подіюні прийоми застосовують для більш точного моделювання відповідно до
+протікання хвороби - часто є певний період під час якого інфікований, 
+ще не заражає оточуючих або заражає з меншим шансом, більш тісним контаком, 
+або період до проявів перших симптомів і початком домашньої ізоляції,
+носіння маски. 
+Все це впливає на парамтри та рівняння моделі і на точність резульата. 
+Буде складніше підібрати вірні параметри, але це може позетивно вплинути на точність.
+
+\section{SEI модель}
+
+Іноді моделі не ускладнюютть, а спрощують. 
+Наприклад, якщо для хвороби виробити імунітет навічно не можливо, 
+як от нежить, одужаних розглядати немає сенсу. 
+Таким чином схема спрощується(див рис. \ref{SEI graph})
+
+\begin{risunok}[ht]
+    \centering
+    \begin{tikzpicture}
+        \node
+        [style={rectangle, draw=green!60, fill=green!5, very thick}]
+        (Susceptible){Susceptible}; 
+        \node
+        [style={rectangle, draw=red!60, fill=red!5, very thick}]
+        (Infectious)[right=of Susceptible]{Infectious};
+        \node
+        [style={rectangle, draw=blue!60, fill=blue!5, very thick}]
+        (Removed)[right=of Infectious]{Removed};
+        \draw[->, style={very thick}] (Susceptible.east)
+        to node[above] {$ \frac{\beta}{N} $} (Infectious.west);
+        \draw[->, style={very thick}] (Infectious.east)
+        to node[above] {$  a $} (Removed.west);
+        \draw[->, style={very thick}] (Removed.north)
+        .. controls +(up:10mm) and +(up:10mm) .. 
+        node[above] {$ \gamma $}
+        (Susceptible.north);
+    \end{tikzpicture}
+    \vspace{0.5cm}
+    \caption{Схема роботи SEI моделі}
+    \label{SEI graph}
+\end{risunok}
+
+Отже і система буде складатись з меншої кількості рівняннь. (див рівняння \ref{SEIS})
+
+\begin{equation}
+    \begin{cases}
+        \frac{dS}{dt} = - \frac{\beta}{N}SI + \gamma I \\
+        \frac{dE}{dt} = \frac{\beta}{N}SI - aE         \\
+        \frac{dI}{dt} = aE - \gamma I                  \\
+    \end{cases}
+\end{equation}
+\label{SEIS}
+
+
+\section{Смертність}
+
+Якщо зробити припущення, що людина у кожній групі може померти з ймовірністю $\mu$, то кожна група буде зменшуватися на добуток $\mu$ та популяцію цієї групи. 
+В таких моделях також додають до розгляду новонароджених. Якщо припустити, 
+що у середньому народжуваність за момент часу $dt$ дорівнює $\Lambda$, 
+одержемо нуву систему рівняннь. (див рівняння \ref{SIR with mortality})  
+
+
+\begin{equation}
+    \begin{cases}
+        \frac{dS}{dt} = \Lambda -  \mu S - \frac{\beta}{N}SI  \\
+        \frac{dI}{dt} = \frac{\beta}{N}SI - \gamma I -  \mu I \\
+        \frac{dR}{dt} = \gamma I -  \mu R
+    \end{cases}
+\end{equation}
+\label{SIR with mortality}
+
+
+У даній моделі населення вже буде змінюватись. (див рівняння \ref{Population})
+
+\begin{equation}
+    \frac{dN(t)}{dt} = \Lambda - \mu N(t) = \Lambda - \mu (S(t) + I(t) + R(t))
+\end{equation}
+\label{Population}
+
+
+Іноді для спрощення встановлюють $ \Lambda = \mu $ - за таких значень 
+населення не змінюється, проте трохи збільшується потенціал інфікування (з приростом нового покоління у категорію здорових)
+
+
+
+
+\section{SIR-подібні моделі з вакцинацією}
+
+
+\begin{equation}
+    \begin{cases}
+        \frac{dS}{dt} = v N (1 - P) - \frac{\beta}{N}SI          \\
+        \frac{dI}{dt} = \frac{\beta}{N}SI - \gamma I \\
+        \frac{dR}{dt} = \gamma I \\
+        \frac{dV}{dt} = v N P
+    \end{cases}
+\end{equation}
+\label{SIR vaccinaton}
