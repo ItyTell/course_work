@@ -72,7 +72,7 @@ vector<float> model(vector<float>parameters, float dt){
     return E;
 }
 
-vector<float> roy(float (*func)(vector<float>), vector<float> A, vector<float> B,float eps = 0.01, int n = 12, int N = 100, int iteration = 10, float w = 0.9, float a1 = 1.5, float a2 = 1.7){
+vector<float> roy(float (*func)(vector<float>), vector<float> A, vector<float> B,float eps, int n, int N, int iteration, float w, float a1, float a2){
     vector<vector<float>>X(N, vector<float>(n));
     vector<vector<float>>V(N, vector<float>(n));
 
@@ -98,9 +98,9 @@ vector<float> roy(float (*func)(vector<float>), vector<float> A, vector<float> B
     for (int i = 0; i < N; i++){
         for (int j = 0; j < n; j++){
             X[i][j] = X[i][j] + V[i][j];
-            cout << X[i][j] << " ";}cout << endl; }
-
-    cout << endl << endl;
+        }
+    }
+    
     for (int k = 0; k < iteration; k++){
         for(int i = 0; i < N; i++){
             new_res[i] = func(X[i]);
@@ -110,13 +110,12 @@ vector<float> roy(float (*func)(vector<float>), vector<float> A, vector<float> B
         b = P[m.first];
         for (int i = 0; i < N; i++){
             for (int j = 0; j < n; j++){
-                V[i][j] = w * V[i][j] + a1 * rnd() * (P[i][j] - X[i][j]) + a2 * rnd()*(b[j] - X[i][j]);
+                V[i][j] = w * V[i][j] + a1 * rnd(0, 1) * (P[i][j] - X[i][j]) + a2 * rnd(0, 1)*(b[j] - X[i][j]);
                 X[i][j] += V[i][j];
             }
         }
 
         w = 0.4 + 0.5 / (k + 1);
-        w = 0.9;
     }
 
     return b;
@@ -126,7 +125,7 @@ vector<float> roy(float (*func)(vector<float>), vector<float> A, vector<float> B
 float f1(vector<float> X){
     float result = 0;
     for (int i = 0; i < X.size(); i++){
-        result += X[i] - 10 * cos(2 * M_PI * X[i]);
+        result += X[i] * X[i] - 10 * cos(2 * M_PI * X[i]);
     }
     result += X.size() * 10;
     return result;
@@ -147,10 +146,11 @@ int main(){
     //    cout << floor(I[j])<<"   ";
     //}
 
+
     vector<float> A(12, -5.12);
     vector<float> B(12, 5.12);
 
-    vector<float> result = roy(f1, A, B, 0.0001, 12, 100, 11, 0.9, 1.5, 1.7);
+    vector<float> result = roy(f1, A, B, 0.01, 12, 100, 100000, 0.9, 1.5, 1.7  );
 
     for (int i = 0; i < result.size(); i++){cout<< result[i] << endl;}
     cout << "f1() = " << f1(result) << endl;
