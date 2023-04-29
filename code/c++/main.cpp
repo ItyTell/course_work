@@ -4,6 +4,8 @@
 #include <random>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -34,7 +36,9 @@ vector<float> model(vector<float>parameters, float dt){
     float sigma_p = parameters[9];
     float gama_r = parameters[10];
     float sigma_h = parameters[11];
-    const  int T = 365;
+
+    const  int T = 100;
+
     vector<float> S(T/dt);
     vector<float> E(T/dt);
     vector<float> I(T/dt);
@@ -70,6 +74,8 @@ vector<float> model(vector<float>parameters, float dt){
         F[t] = F[t - 1] + F[t] * dt;
     }
     return E;
+
+
 }
 
 vector<float> roy(float (*func)(vector<float>), vector<float> A, vector<float> B,float eps, int n, int N, int iteration, float w, float a1, float a2){
@@ -131,10 +137,51 @@ float f1(vector<float> X){
     return result;
 }
 
+double Double(string s) {
+    int l = 0, k = 10;
+    double sum = 0, p = 0;
+    int i = 0;
+    bool flag = 1;
+    size_t size = s.size();
+    for (; i < size; i++) {
+        l = int(s[i]);
+        if (flag) {sum *= 10;}
+        if (l >= 48 && l <= 57) {
+            p = l - 48;
+            if (!flag) { p /= k; k *= 10; }
+            sum += p;
+        }
+        else if (l == 46) {
+            if (!flag){ throw std::logic_error("two points"); }
+            sum /= 10;
+            flag = 0;
+        }
+        else { throw std::logic_error("not a constant"); }
+    }
+    return sum;
+}
+
+
+
+
+float dist(vector<float> parameters){
+    return 1;
+}
+
 
 int main(){
     float dt = 0.0001;
     srand(time(NULL));
+    ifstream Data("code\\data.txt");
+
+    vector<int> real_data(100);
+    string data;
+    for (int i = 0; i < 100; i++){
+        getline(Data, data);
+        cout << data << endl;
+        real_data[i] = int(Double(data));
+    }    
+    Data.close();
 
     //vector<float>parameters = {2.55, 1.56, 7.65, 0.25, 0.58, 0.001, 0.94, 0.27, 0.5, 3.5, 1, 0.3};
 
@@ -146,15 +193,15 @@ int main(){
     //    cout << floor(I[j])<<"   ";
     //}
 
+    //vector<float> A(12, 0);
+    //vector<float> B(12, 10);
 
-    vector<float> A(12, -5.12);
-    vector<float> B(12, 5.12);
+    //vector<float> result = roy(dist, A, B, 0.01, 12, 100, 100000, 0.9, 1.5, 1.7  );
 
-    vector<float> result = roy(f1, A, B, 0.01, 12, 100, 100000, 0.9, 1.5, 1.7  );
+    //for (int i = 0; i < result.size(); i++){cout<< result[i] << endl;}
+    //cout << "f1() = " << dist(result) << endl;
 
-    for (int i = 0; i < result.size(); i++){cout<< result[i] << endl;}
-    cout << "f1() = " << f1(result) << endl;
-
+    cout<< real_data[30];
 
     return 0;
 }

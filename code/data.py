@@ -13,7 +13,7 @@ df = file.parse("Sheet1")
 f = open(r"C:\Users\nickk\course_work\code\data.txt", "w")
 s = ""
 for data in df["total_cases"]:
-    s += str(data) + " "
+    s += str(data) + "\n"
 
 f.write(s)
 f.close()
