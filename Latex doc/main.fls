@@ -1,8 +1,8 @@
-PWD c:/Users/nickk/OneDrive/Робочий стіл/course_work
+PWD c:/Users/nickk/course_work/Latex doc
 INPUT c:/Games/texlive/2023/texmf.cnf
 INPUT c:/Games/texlive/2023/texmf-dist/web2c/texmf.cnf
 INPUT c:/Games/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT c:/Users/nickk/OneDrive/Робочий стіл/course_work/main.tex
+INPUT c:/Users/nickk/course_work/Latex doc/main.tex
 OUTPUT main.log
 INPUT c:/Games/texlive/2023/texmf-dist/tex/latex/extsizes/extreport.cls
 INPUT c:/Games/texlive/2023/texmf-dist/tex/latex/extsizes/extreport.cls
@@ -1036,6 +1036,9 @@ INPUT ch0.aux
 INPUT ./ch1.aux
 INPUT ch1.aux
 INPUT ch1.aux
+INPUT ./ch2.aux
+INPUT ch2.aux
+INPUT ch2.aux
 OUTPUT main.aux
 INPUT c:/Games/texlive/2023/texmf-dist/tex/latex/cyrillic/ot2cmr.fd
 INPUT c:/Games/texlive/2023/texmf-dist/tex/latex/cyrillic/ot2cmr.fd
@@ -1129,6 +1132,15 @@ INPUT ch1.tex
 INPUT ./ch1.tex
 INPUT ch1.tex
 INPUT c:/Games/texlive/2023/texmf-dist/fonts/tfm/public/tempora/Tempora-Bold-TLF-t2a.tfm
+INPUT ./ch2.tex
+OUTPUT ch2.aux
+INPUT ./ch2.tex
+INPUT ./ch2.tex
+INPUT ./ch2.tex
+INPUT ./ch2.tex
+INPUT ch2.tex
+INPUT ./ch2.tex
+INPUT ch2.tex
 INPUT ./main.bbl
 INPUT main.bbl
 INPUT ./main.bbl
@@ -1144,6 +1156,9 @@ INPUT ch0.aux
 INPUT ./ch1.aux
 INPUT ch1.aux
 INPUT ch1.aux
+INPUT ./ch2.aux
+INPUT ch2.aux
+INPUT ch2.aux
 INPUT ./main.out
 INPUT ./main.out
 INPUT c:/Games/texlive/2023/texmf-dist/fonts/type1/public/tempora/Tempora-Bold.pfb
@@ -1152,5 +1167,6 @@ INPUT c:/Games/texlive/2023/texmf-dist/fonts/type1/public/tempora/Tempora-Regula
 INPUT c:/Games/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 INPUT c:/Games/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 INPUT c:/Games/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb
+INPUT c:/Games/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
 INPUT c:/Games/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb
 INPUT c:/Games/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
