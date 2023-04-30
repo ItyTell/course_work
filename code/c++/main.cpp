@@ -13,7 +13,7 @@ using namespace std;
 # define M_PI           3.14159265358979323846
 
 vector<int> real_data(100);
-float dt = 0.01;
+float dt = 0.0001;
 
 pair<int, float> min(vector<float> a){
     int size = a.size();
@@ -116,11 +116,13 @@ vector<float> roy(float (*func)(vector<float>), vector<float> A, vector<float> B
             if (new_res[i] < res[i]){res[i] = new_res[i]; P[i] = X[i];}
         }
         m = min(res);
+        if (k % 300 == 0){cout<< m.second << endl;}
         b = P[m.first];
         for (int i = 0; i < N; i++){
             for (int j = 0; j < n; j++){
                 V[i][j] = w * V[i][j] + a1 * rnd(0, 1) * (P[i][j] - X[i][j]) + a2 * rnd(0, 1)*(b[j] - X[i][j]);
                 X[i][j] += V[i][j];
+                if (X[i][j] < 0){X[i][j] = 0;}
             }
         }
 
@@ -184,7 +186,9 @@ int main(){
     Data.open("..\\data.txt");
 
     //vector<int> real_data(100);
+    //vector<float>parameters = {2.55, 1.56, 7.65, 0.25, 0.58, 0.001, 0.94, 0.27, 0.5, 3.5, 1, 0.3};
 
+    int j;
     string data;
     for (int i = 0; i < 100; i++){
         getline(Data, data);
@@ -192,7 +196,24 @@ int main(){
     }    
     Data.close();
 
-    //vector<float>parameters = {2.55, 1.56, 7.65, 0.25, 0.58, 0.001, 0.94, 0.27, 0.5, 3.5, 1, 0.3};
+    for (int i = 1; i < 100; i++){
+        j = int(i / dt);
+        if (i % 10 == 0){cout << "\n";}
+        cout << floor(real_data[i])<<"   ";
+    }
+
+    cout << endl << endl;
+    float dt1 = 1;
+    //                         b,   b1, l,    k,  p1,   p2,     gm_a, gm_i,  sgm_i, sgm_p,gm_r,sgm_h
+    vector<float>parameters = {8, 7.6, 1.5, 0.25, 0.58, 0.01, 35.94, 35.87, 80.5, 3.5, dt, 0.3};
+    cout << dist(parameters) << endl;
+    vector<float> I = model(parameters, dt);
+    for (int i = 1; i < 100; i++){
+        j = int(i / dt);
+        if (i % 10 == 0){cout << "\n";}
+        cout << floor(I[j])<<"   ";
+    }
+
 
     //vector<float> I = model(parameters, dt);
     //int j;
@@ -210,17 +231,15 @@ int main(){
     //for (int i = 0; i < result.size(); i++){cout<< result[i] << endl;}
     //cout << "f1() = " << dist(result) << endl;
 
-    vector<float> A(12, 0);
-    vector<float> B(12, 12);
 
-    auto time1 = time(NULL);
-    vector<float> res = roy(dist, A, B, 0.01, 12, 100, 300, 0.9, 1.5, 1.7);
-    cout << "totla time " << time(NULL) - time1 << endl << endl;
-
-    cout << "engame parameters: " << endl;
-
-    for (int i = 0; i < res.size(); i++){cout<< " \t " << res[i] << endl;}
-    cout << "f1() = " << dist(res) << endl;
+    //vector<float> A(12, 0);
+    //vector<float> B(12, 12);
+    //auto time1 = time(NULL);
+    //vector<float> res = roy(dist, A, B, 0.01, 12, 100, 300, 0.9, 1.5, 1.7);
+    //cout << "totla time " << time(NULL) - time1 << endl << endl;
+    //cout << "engame parameters: " << endl;
+    //for (int i = 0; i < res.size(); i++){cout<< " \t " << res[i] << endl;}
+    //cout << "f1() = " << dist(res) << endl;
 
     return 0;
 }
