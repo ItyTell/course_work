@@ -10,7 +10,10 @@
 using namespace std;
 
 
-# define M_PI           3.14159265358979323846 
+# define M_PI           3.14159265358979323846
+
+vector<int> real_data(100);
+float dt = 0.01;
 
 pair<int, float> min(vector<float> a){
     int size = a.size();
@@ -48,7 +51,7 @@ vector<float> model(vector<float>parameters, float dt){
     vector<float> R(T/dt);
     vector<float> F(T/dt);
     
-    int N = int(11000000 / 250);
+    int N = int(647601);
     S[0] = N - 6;
     I[0] = 1;
     P[0] = 5;
@@ -165,17 +168,23 @@ double Double(string s) {
 
 
 float dist(vector<float> parameters){
-    return 1;
+    float result = 0; float r1 = 0;
+    vector<float> I = model(parameters, dt);
+    for (int i = 0; i < 100; i++){
+        r1 = (I[i] - real_data[i]);
+        result += r1 * r1;
+    }
+    return result;
 }
 
 
 int main(){
-    float dt = 0.0001;
     srand(time(NULL));
     ifstream Data;
     Data.open("..\\data.txt");
 
-    vector<int> real_data(100);
+    //vector<int> real_data(100);
+
     string data;
     for (int i = 0; i < 100; i++){
         getline(Data, data);
@@ -201,7 +210,17 @@ int main(){
     //for (int i = 0; i < result.size(); i++){cout<< result[i] << endl;}
     //cout << "f1() = " << dist(result) << endl;
 
-    cout<< real_data[30];
+    vector<float> A(12, 0);
+    vector<float> B(12, 12);
+
+    auto time1 = time(NULL);
+    vector<float> res = roy(dist, A, B, 0.01, 12, 100, 300, 0.9, 1.5, 1.7);
+    cout << "totla time " << time(NULL) - time1 << endl << endl;
+
+    cout << "engame parameters: " << endl;
+
+    for (int i = 0; i < res.size(); i++){cout<< " \t " << res[i] << endl;}
+    cout << "f1() = " << dist(res) << endl;
 
     return 0;
 }
