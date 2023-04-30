@@ -172,13 +172,13 @@ float dist(vector<float> parameters){
 int main(){
     float dt = 0.0001;
     srand(time(NULL));
-    ifstream Data("code\\data.txt");
+    ifstream Data;
+    Data.open("..\\data.txt");
 
     vector<int> real_data(100);
     string data;
     for (int i = 0; i < 100; i++){
         getline(Data, data);
-        cout << data << endl;
         real_data[i] = int(Double(data));
     }    
     Data.close();
