@@ -13,7 +13,7 @@ using namespace std;
 # define M_PI           3.14159265358979323846
 
 vector<int> real_data(100);
-float dt = 0.0001;
+float dt = 0.001;
 
 pair<int, float> min(vector<float> a){
     int size = a.size();
@@ -28,64 +28,30 @@ float rnd(float a = 0, float b = 1){return double(rand()) / RAND_MAX * (b - a) +
 vector<float> model(vector<float>parameters, float dt){
 
     float beta = parameters[0];
-    float beta1 = parameters[1];
-    float l = parameters[2];
-    float k = parameters[3];
-    float p1 = parameters[4];
-    float p2 = parameters[5];
-    float gama_a = parameters[6];
-    float gama_i = parameters[7];
-    float sigma_i = parameters[8];
-    float sigma_p = parameters[9];
-    float gama_r = parameters[10];
-    float sigma_h = parameters[11];
+    float gama = parameters[1];
 
     const  int T = 100;
 
     vector<float> S(T/dt);
-    vector<float> E(T/dt);
     vector<float> I(T/dt);
-    vector<float> P(T/dt);
-    vector<float> A(T/dt);
-    vector<float> H(T/dt);
     vector<float> R(T/dt);
-    vector<float> F(T/dt);
-    vector<float> result(T/dt);
     
     int N = int(647601);
     S[0] = N - 6;
-    E[0] = 0;
     I[0] = 1;
-    P[0] = 5;
-    A[0] = 0;
-    H[0] = 0;
     R[0] = 0;
-    F[0] = 0;
-    result[0] = I[0] + P[0] + H[0];
 
     for (int t = 1; t < int(T / dt); t++){
-        S[t] = (-beta * S[t - 1] * I[t - 1] - l * beta * H[t - 1] * S[t - 1] - beta1 * P[t - 1] * S[t - 1] )/ N;
-        E[t] = -S[t] - k * E[t - 1];
-        I[t] = k * p1 * E[t - 1] - (gama_a + gama_i) * I[t - 1] - sigma_i * I[t - 1];
-        P[t] = k * p2 * E[t - 1] - (gama_a + gama_i) * P[t - 1] - sigma_p * P[t - 1];
-        A[t] = k * (1 - p1 - p2) * E[t - 1];
-        H[t] = gama_a * (I[t - 1] + P[t - 1]) - gama_r * H[t - 1] - sigma_h * H[t - 1];
-        R[t] = gama_i * (I[t - 1] + P[t - 1]) + gama_r * H[t - 1];
-        F[t] = sigma_i * I[t - 1] + sigma_p * P[t - 1] + sigma_h * H[t - 1];
+        S[t] = -beta * S[t - 1] * I[t - 1]/ N;
+        I[t] = S[t] - gama * I[t - 1];
+        R[t] = gama * I[t - 1];
         
 
         S[t] = S[t - 1] + S[t] * dt;
-        E[t] = E[t - 1] + E[t] * dt;
         I[t] = I[t - 1] + I[t] * dt;
-        P[t] = P[t - 1] + P[t] * dt;
-        A[t] = A[t - 1] + A[t] * dt;
-        H[t] = H[t - 1] + H[t] * dt;
         R[t] = R[t - 1] + R[t] * dt;
-        F[t] = F[t - 1] + F[t] * dt;
-
-        result[t] = I[t] + P[t] + H[t]; 
     }
-    return result;
+    return I;
 
 
 }
@@ -125,7 +91,7 @@ vector<float> roy(float (*func)(vector<float>), vector<float> A, vector<float> B
             if (new_res[i] < res[i]){res[i] = new_res[i]; P[i] = X[i];}
         }
         m = min(res);
-        if (k % 300 == 0){cout<< m.second << endl;}
+        if (k % 20 == 0){cout<< m.second << endl;}
         b = P[m.first];
         for (int i = 0; i < N; i++){
             for (int j = 0; j < n; j++){
@@ -192,9 +158,8 @@ float dist(vector<float> parameters){
 int main(){
     srand(time(NULL));
     ifstream Data;
-    Data.open("..\\data.txt");
+    Data.open("..\\..\\data.txt");
 
-    //vector<int> real_data(100);
     //vector<float>parameters = {2.55, 1.56, 7.65, 0.25, 0.58, 0.001, 0.94, 0.27, 0.5, 3.5, 1, 0.3};
 
     int j;
@@ -205,23 +170,21 @@ int main(){
     }    
     Data.close();
 
-    //for (int i = 1; i < 100; i++){
-    //    j = int(i / dt);
-    //    if (i % 10 == 0){cout << "\n";}
-    //    cout << floor(real_data[i])<<"   ";
-    //}
+    for (int i = 1; i < 100; i++){
+        j = int(i / dt);
+        if (i % 10 == 0){cout << "\n";}
+        cout << floor(real_data[i])<<"   ";
+    }
 
-//    cout << endl << endl;
-    //float dt1 = 1;
-    //                         b,   b1, l,    k,  p1,   p2,     gm_a, gm_i,  sgm_i, sgm_p,gm_r,sgm_h
-    //vector<float>parameters = {8, 7.6, 1.5, 0.25, 0.58, 0.01, 35.94, 35.87, 80.5, 3.5, dt, 0.3};
-    //cout << dist(parameters) << endl;
-    //vector<float> I = model(parameters, dt);
-    //for (int i = 1; i < 100; i++){
-    //    j = int(i / dt);
-    //    if (i % 10 == 0){cout << "\n";}
-    //    cout << floor(I[j])<<"   ";
-    //}
+    cout << endl << endl;
+    vector<float>parameters = {76.7341, 363.669};
+    cout << dist(parameters) << endl;
+    vector<float> I = model(parameters, dt);
+    for (int i = 1; i < 100; i++){
+        j = int(i / dt);
+        if (i % 10 == 0){cout << "\n";}
+        cout << floor(I[j])<<"   ";
+    }
 
 
     //vector<float> I = model(parameters, dt);
@@ -240,11 +203,12 @@ int main(){
     //for (int i = 0; i < result.size(); i++){cout<< result[i] << endl;}
     //cout << "f1() = " << dist(result) << endl;
 
+    cout << endl << endl;
 
     vector<float> A(12, 0);
     vector<float> B(12, 12);
     auto time1 = time(NULL);
-    vector<float> res = roy(dist, A, B, 0.01, 12, 100, 300, 0.9, 1.5, 1.7);
+    vector<float> res = roy(dist, A, B, 0.01, 2, 100, 100, 0.9, 1.5, 1.7);
     cout << "totla time " << time(NULL) - time1 << endl << endl;
     cout << "engame parameters: " << endl;
     for (int i = 0; i < res.size(); i++){cout<< " \t " << res[i] << endl;}
