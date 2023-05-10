@@ -42,7 +42,8 @@ def g(beta, gama):
         I[i + 1] = I[i] + f2(S[i], I[i], R[i], beta, gama) * dt
         R[i + 1] = R[i] + f3(S[i], I[i], R[i], beta, gama) * dt
         if i % int(1 / dt) == 0:
-            result[i // int(1 / dt)] = (I[i + 1])
+            z = i // int(1 / dt) 
+            result[z] = I[i + 1] + result[z - 1 if z > 0 else 0] 
     return result 
 
 
