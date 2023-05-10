@@ -6,6 +6,19 @@ from datetime import datetime
 
 from matplotlib.widgets import Slider, Button
 
+class Param():
+    def __init__(self, fig, label, init_val, min, max, cords) -> None:
+        self.ax = fig.add_axes(cords)
+        self.slider = Slider(
+                            ax=self.ax,
+                            label=label,
+                            valmin=min,
+                            valmax=max,
+                            valinit=init_val)
+        
+
+
+
 
 f = open("data.txt")
 data = f.readline().split()
@@ -48,66 +61,37 @@ def g(beta, gama):
 
 
 
-# The parametrized function to be plotted
-def f(t, amplitude, frequency):
-    return amplitude * np.sin(2 * np.pi * frequency * t)
-
 t = np.array([i for i in range(T)])
 
-# Define initial parameters
-init_beta = 0.3
-init_gama = 0.2
+init_beta = 0.12
+init_gama = 0.11
 
-# Create the figure and the line that we will manipulate
 fig, ax = plt.subplots()
 line, = ax.plot(t, g(init_beta, init_gama), lw=2)
 ax.plot(t, data, color='r')
 ax.set_xlabel('Time [d]')
 plt.ylim(0, N / 2)
 
-# adjust the main plot to make room for the sliders
-fig.subplots_adjust(left=0.25, bottom=0.25)
+fig.subplots_adjust(bottom=0.4)
 
-# Make a horizontal slider to control the frequency.
-axgama = fig.add_axes([0.25, 0.1, 0.65, 0.03])
-gama_slider = Slider(
-    ax=axgama,
-    label='gama',
-    valmin=0,
-    valmax=1,
-    valinit=init_gama,
-)
+gama = Param(fig, 'gama', init_gama, 0, 1, [0.25, 0.25, 0.65, 0.03])
 
-# Make a vertically oriented slider to control the amplitude
-axbeta = fig.add_axes([0.1, 0.25, 0.0225, 0.63])
-beta_slider = Slider(
-    ax=axbeta,
-    label="beta",
-    valmin=0,
-    valmax=1,
-    valinit=init_beta,
-    orientation="vertical"
-)
+beta = Param(fig, 'beta', init_beta, 0, 1, [0.25, 0.1, 0.65, 0.03])
 
 
-# The function to be called anytime a slider's value changes
 def update(val):
-    line.set_ydata(g(beta_slider.val, gama_slider.val))
+    line.set_ydata(g(beta.slider.val, gama.slider.val))
     fig.canvas.draw_idle()
 
+gama.slider.on_changed(update)
+beta.slider.on_changed(update)
 
-# register the update function with each slider
-gama_slider.on_changed(update)
-beta_slider.on_changed(update)
-
-# Create a `matplotlib.widgets.Button` to reset the sliders to initial values.
 resetax = fig.add_axes([0.8, 0.025, 0.1, 0.04])
 button = Button(resetax, 'Reset', hovercolor='0.975')
 
-
 def reset(event):
-    gama_slider.reset()
-    beta_slider.reset()
+    gama.slider.reset()
+    beta.slider.reset()
 button.on_clicked(reset)
 
 plt.show()

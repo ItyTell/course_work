@@ -156,6 +156,36 @@ E(t) функція кількості заражених, коефіцієнт 
 \label{SEIS}
 
 
+\section{SEIPR}
+
+\begin{equation}
+    \left\{\begin{array}{l}
+    \frac{d S}{d t}=-\beta \frac{I}{N} S-\beta^{\prime} \frac{P}{N} S, \\
+    \frac{d E}{d t}=\beta \frac{I}{N} S+l \beta \frac{H}{N} S+\beta^{\prime} \frac{P}{N} S-\kappa E, \\
+    \frac{d I}{d t}=\kappa \rho_1 E-\gamma_i I, \\
+    \frac{d P}{d t}=\kappa (1 - \rho_1) E-\gamma_i P, \\
+    \frac{d R}{d t}=\gamma_i(I+P)\\
+    \end{array}\right.
+\end{equation}
+\label{SEIPR}
+
+
+
+
+\section{SEIAPR}
+\begin{equation}
+    \left\{\begin{array}{l}
+    \frac{d S}{d t}=-\beta \frac{I}{N} S-\beta^{\prime} \frac{P}{N} S, \\
+    \frac{d E}{d t}=\beta \frac{I}{N} S+l \beta \frac{H}{N} S+\beta^{\prime} \frac{P}{N} S-\kappa E, \\
+    \frac{d I}{d t}=\kappa \rho_1 E-\gamma_i I, \\
+    \frac{d P}{d t}=\kappa \rho_2 E-\gamma_i P, \\
+    \frac{d A}{d t}=\kappa\left(1-\rho_1-\rho_2\right) E, \\
+    \frac{d R}{d t}=\gamma_i(I+P)\\
+    \end{array}\right.
+\end{equation}
+\label{SEIAPR}
+
+
 \section{Смертність}
 
 Якщо зробити припущення, що людина у кожній групі може померти з ймовірністю $\mu$, то кожна група буде зменшуватися на добуток $\mu$ та популяцію цієї групи. 
