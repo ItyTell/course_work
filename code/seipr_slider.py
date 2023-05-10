@@ -7,6 +7,24 @@ from datetime import datetime
 from matplotlib.widgets import Slider, Button
 
 
+class Param():
+
+    n = 0
+    sliders = []
+
+    def __init__(self, fig, label, init_val, min, max) -> None:
+        self.ax = fig.add_axes([0.1, 0.4 - Param.n * 0.05, 0.8, 0.02])
+        self.slider = Slider(
+                            ax=self.ax,
+                            label=label,
+                            valmin=min,
+                            valmax=max,
+                            valinit=init_val)
+        Param.n += 1
+        Param.sliders.append(self.slider)
+
+
+
 f = open("data.txt")
 data = f.readline().split()
 for i in range(len(data)):
@@ -18,22 +36,27 @@ T = 1151
 dt = 0.1
 N = 647601
 
-def f1(s, e, i, r, beta, a, gama):
-    return -beta * s * i / N
+def f1(s, e, i, p, r, beta, beta1, p1, a, gama):
+    return -beta * s * i / N -beta1 * s * p1 / N
 
-def f2(s, e, i, r, beta, a, gama):
-    return beta * s * i / N - a * e
+def f2(s, e, i, p, r, beta, beta1, p1, a, gama):
+    return beta * s * i / N + beta1 * s * p1 / N - a * e
 
-def f3(s, e, i, r, beta, a, gama):
-    return a * e - gama * i 
+def f3(s, e, i, p, r, beta, beta1, p1, a, gama):
+    return a * p1 * e - gama * i 
 
-def f4(s, e, i, r, beta, a, gama):
-    return gama * i
+def f4(s, e, i, p, r, beta, beta1, p1, a, gama):
+    return a * (1 - p1) * e - gama * p
 
-def g(beta, a, gama):
+def f5(s, e, i, p, r, beta, beta1, p1, a, gama):
+    return gama * (i + p)
+
+
+def g(beta, beta1, p1, a, gama):
     S = np.zeros(int(T / dt) +1)
     E = np.zeros(int(T / dt) + 1)
     I = np.zeros(int(T / dt) + 1)
+    P = np.zeros(int(T / dt) + 1)
     R = np.zeros(int(T / dt) + 1)
     result = np.zeros(T)
     
@@ -42,13 +65,14 @@ def g(beta, a, gama):
     t = 0
     for i in range(int(T / dt)):
         t += dt
-        S[i + 1] = S[i] + f1(S[i], E[i], I[i], R[i], beta, a, gama) * dt
-        E[i + 1] = E[i] + f2(S[i], E[i], I[i], R[i], beta, a, gama) * dt
-        I[i + 1] = I[i] + f3(S[i], E[i], I[i], R[i], beta, a, gama) * dt
-        R[i + 1] = R[i] + f4(S[i], E[i], I[i], R[i], beta, a, gama) * dt
+        S[i + 1] = S[i] + f1(S[i], E[i], I[i], P[i], R[i], beta, beta1, p1, a, gama) * dt
+        E[i + 1] = E[i] + f2(S[i], E[i], I[i], P[i], R[i], beta, beta1, p1, a, gama) * dt
+        I[i + 1] = I[i] + f3(S[i], E[i], I[i], P[i], R[i], beta, beta1, p1, a, gama) * dt
+        P[i + 1] = P[i] + f3(S[i], E[i], I[i], P[i], R[i], beta, beta1, p1, a, gama) * dt
+        R[i + 1] = R[i] + f5(S[i], E[i], I[i], P[i], R[i], beta, beta1, p1, a, gama) * dt
         if i % int(1 / dt) == 0:
             z = i // int(1 / dt) 
-            result[z] = I[i + 1] + result[z - 1 if z > 0 else 0] 
+            result[z] = I[i + 1] + P[i + 1] + result[z - 1 if z > 0 else 0] 
     return result 
 
 
@@ -57,59 +81,39 @@ t = np.array([i for i in range(T)])
 
 # Define initial parameters
 init_beta = 0.224
-init_gama = 0.212
+init_beta1 = 0.1
+init_p1 = 1
 init_a = 3
+init_gama = 0.212
+
 
 # Create the figure and the line that we will manipulate
 fig, ax = plt.subplots()
-line, = ax.plot(t, g(init_beta, init_a ,init_gama), lw=2)
+line, = ax.plot(t, g(init_beta, init_beta1, init_p1, init_a ,init_gama), lw=2)
 ax.plot(t, data, color='r')
 ax.set_xlabel('Time [d]')
 plt.ylim(0, N / 2)
 
-# adjust the main plot to make room for the sliders
-fig.subplots_adjust(left=0.25, bottom=0.4)
+fig.subplots_adjust(bottom=0.5)
 
-# Make a horizontal slider to control the frequency.
-axgama = fig.add_axes([0.25, 0.25, 0.65, 0.03])
-gama_slider = Slider(
-    ax=axgama,
-    label='gama',
-    valmin=0,
-    valmax=1,
-    valinit=init_gama,
-)
-axa = fig.add_axes([0.25, 0.1, 0.65, 0.03])
-a_slider = Slider(
-    ax=axa,
-    label='a',
-    valmin=0,
-    valmax=3,
-    valinit=init_a,
-)
+beta = Param(fig, 'beta', init_beta, 0, 1)
 
-# Make a vertically oriented slider to control the amplitude
-axbeta = fig.add_axes([0.1, 0.25, 0.0225, 0.63])
-beta_slider = Slider(
-    ax=axbeta,
-    label="beta",
-    valmin=0,
-    valmax=1,
-    valinit=init_beta,
-    orientation="vertical"
-)
+beta1 = Param(fig, 'beta1', init_beta1, 0, 1)
+
+p1 = Param(fig, 'p1', init_p1, 0, 1)
+
+a =          Param(fig, 'a', init_a, 0, 3)
+
+gama = Param(fig, 'gama', init_gama, 0, 1)
 
 
 # The function to be called anytime a slider's value changes
 def update(val):
-    line.set_ydata(g(beta_slider.val, a_slider.val, gama_slider.val))
+    line.set_ydata(g(beta.slider.val, beta1.slider.val, p1.slider.val, a.slider.val, gama.slider.val))
     fig.canvas.draw_idle()
 
-
-# register the update function with each slider
-gama_slider.on_changed(update)
-a_slider.on_changed(update)
-beta_slider.on_changed(update)
+for slider in Param.sliders:
+    slider.on_changed(update)
 
 # Create a `matplotlib.widgets.Button` to reset the sliders to initial values.
 resetax = fig.add_axes([0.8, 0.025, 0.1, 0.04])
@@ -117,9 +121,8 @@ button = Button(resetax, 'Reset', hovercolor='0.975')
 
 
 def reset(event):
-    gama_slider.reset()
-    a_slider.reset()
-    beta_slider.reset()
+    for slider in Param.sliders:
+        slider.reset()
 button.on_clicked(reset)
 
 plt.show()
