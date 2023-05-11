@@ -84,17 +84,34 @@ def update(val):
 
 
 for slider in Param.sliders:
-    slider.on_changed(update)
+    slider.slider.on_changed(update)
 
 resetax = fig.add_axes([0.8, 0.025, 0.1, 0.04])
 button = Button(resetax, 'Reset', hovercolor='0.975')
 
 def reset(event):
     for slider in Param.sliders:
-        slider.reset()
+        slider.slider.reset()
 
 
 
 button.on_clicked(reset)
+
+
+saveax = fig.add_axes([0.6, 0.025, 0.1, 0.04])
+sve = Button(saveax, 'Save', hovercolor='0.975')
+
+def save_params(event):
+    name = "seir"
+    file = open("C:\\Users\\nickk\\course_work\\code\\sliders\\"+ name +"_params.txt", 'w')
+    for slider in Param.sliders:
+        file.write(slider.name + " " + str(slider.slider.val) + "\n")
+    file.close()
+
+sve.on_clicked(save_params)
+
+
+
+
 
 plt.show()

@@ -13,6 +13,8 @@ data = f.readline().split()
 for i in range(len(data)):
     data[i] = int(data[i])
 
+f.close()
+
 
 
 T = 1151
@@ -20,10 +22,10 @@ dt = 0.1
 N = 647601
 
 def f1(s, e, i, p, r, beta, beta1, p1, a, gama):
-    return -beta * s * i / N -beta1 * s * p1 / N
+    return -beta * s * i / N -beta1 * s * p / N
 
 def f2(s, e, i, p, r, beta, beta1, p1, a, gama):
-    return beta * s * i / N + beta1 * s * p1 / N - a * e
+    return beta * s * i / N + beta1 * s * p / N - a * e
 
 def f3(s, e, i, p, r, beta, beta1, p1, a, gama):
     return a * p1 * e - gama * i 
@@ -65,7 +67,7 @@ t = np.array([i for i in range(T)])
 # Define initial parameters
 init_beta = 0.224
 init_beta1 = 0.1
-init_p1 = 1
+init_p1 = 0.9
 init_a = 3
 init_gama = 0.212
 
@@ -83,20 +85,19 @@ beta = Param(fig, 'beta', init_beta, 0, 1)
 
 beta1 = Param(fig, 'beta1', init_beta1, 0, 1)
 
-p1 = Param(fig, 'p1', init_p1, 0, 1)
+p1 = Param(fig, 'p1', init_p1, 0, 0.999)
 
-a =          Param(fig, 'a', init_a, 0, 3)
+a =          Param(fig, 'a', init_a, 0, 10)
 
 gama = Param(fig, 'gama', init_gama, 0, 1)
 
 
-# The function to be called anytime a slider's value changes
 def update(val):
     line.set_ydata(g(beta.slider.val, beta1.slider.val, p1.slider.val, a.slider.val, gama.slider.val))
     fig.canvas.draw_idle()
 
 for slider in Param.sliders:
-    slider.on_changed(update)
+    slider.slider.on_changed(update)
 
 # Create a `matplotlib.widgets.Button` to reset the sliders to initial values.
 resetax = fig.add_axes([0.8, 0.025, 0.1, 0.04])
@@ -105,7 +106,20 @@ button = Button(resetax, 'Reset', hovercolor='0.975')
 
 def reset(event):
     for slider in Param.sliders:
-        slider.reset()
+        slider.slider.reset()
 button.on_clicked(reset)
+
+saveax = fig.add_axes([0.6, 0.025, 0.1, 0.04])
+sve = Button(saveax, 'Save', hovercolor='0.975')
+
+def save_params(event):
+    name = "seipr"
+    file = open("C:\\Users\\nickk\\course_work\\code\\sliders\\"+ name +"_params.txt", 'w')
+    for slider in Param.sliders:
+        file.write(slider.name + " " + str(slider.slider.val) + "\n")
+    file.close()
+
+sve.on_clicked(save_params)
+
 
 plt.show()

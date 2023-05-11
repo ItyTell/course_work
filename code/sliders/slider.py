@@ -15,6 +15,8 @@ class Param():
                             valmax=max,
                             valinit=init_val)
         Param.n += 1
-        Param.sliders.append(self.slider)
+        Param.sliders.append(self)
+
+        self.name = label
 
 
