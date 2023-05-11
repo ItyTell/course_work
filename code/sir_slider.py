@@ -5,18 +5,7 @@ import pandas as pd
 from datetime import datetime
 
 from matplotlib.widgets import Slider, Button
-
-class Param():
-    def __init__(self, fig, label, init_val, min, max, cords) -> None:
-        self.ax = fig.add_axes(cords)
-        self.slider = Slider(
-                            ax=self.ax,
-                            label=label,
-                            valmin=min,
-                            valmax=max,
-                            valinit=init_val)
-        
-
+from slider import *
 
 
 
@@ -24,8 +13,6 @@ f = open("data.txt")
 data = f.readline().split()
 for i in range(len(data)):
     data[i] = int(data[i])
-
-
 
 T = 1151
 dt = 0.1
@@ -72,11 +59,11 @@ ax.plot(t, data, color='r')
 ax.set_xlabel('Time [d]')
 plt.ylim(0, N / 2)
 
-fig.subplots_adjust(bottom=0.4)
+fig.subplots_adjust(bottom=0.5)
 
-gama = Param(fig, 'gama', init_gama, 0, 1, [0.25, 0.25, 0.65, 0.03])
+gama = Param(fig, 'gama', init_gama, 0, 1)
 
-beta = Param(fig, 'beta', init_beta, 0, 1, [0.25, 0.1, 0.65, 0.03])
+beta = Param(fig, 'beta', init_beta, 0, 1)
 
 
 def update(val):
