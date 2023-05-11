@@ -53,7 +53,7 @@ def g(beta, beta1, p1, a, gama):
         S[i + 1] = S[i] + f1(S[i], E[i], I[i], P[i], R[i], beta, beta1, p1, a, gama) * dt
         E[i + 1] = E[i] + f2(S[i], E[i], I[i], P[i], R[i], beta, beta1, p1, a, gama) * dt
         I[i + 1] = I[i] + f3(S[i], E[i], I[i], P[i], R[i], beta, beta1, p1, a, gama) * dt
-        P[i + 1] = P[i] + f3(S[i], E[i], I[i], P[i], R[i], beta, beta1, p1, a, gama) * dt
+        P[i + 1] = P[i] + f4(S[i], E[i], I[i], P[i], R[i], beta, beta1, p1, a, gama) * dt
         R[i + 1] = R[i] + f5(S[i], E[i], I[i], P[i], R[i], beta, beta1, p1, a, gama) * dt
         if i % int(1 / dt) == 0:
             z = i // int(1 / dt) 
@@ -64,7 +64,9 @@ def g(beta, beta1, p1, a, gama):
 
 t = np.array([i for i in range(T)])
 
-# Define initial parameters
+
+
+
 init_beta = 0.224
 init_beta1 = 0.1
 init_p1 = 0.9
