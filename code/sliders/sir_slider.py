@@ -6,6 +6,10 @@ from datetime import datetime
 
 from matplotlib.widgets import Slider, Button
 from slider import *
+import ctypes
+
+sir = ctypes.CDLL("C:\\Users\\nickk\\course_work\\code\\sliders\\sir\\sir.so")
+
 
 
 
