@@ -7,11 +7,11 @@ from datetime import datetime
 from matplotlib.widgets import Slider, Button
 from slider import *
 import ctypes
+from ctypes import c_float, c_int, POINTER
 
 sir = ctypes.CDLL("C:\\Users\\nickk\\course_work\\code\\sliders\\sir\\sir.so")
-
-
-
+sir.sir.argtypes = [c_int, c_float, c_float, c_int, c_float]
+sir.sir.restype = POINTER(c_int)
 
 f = open("data.txt")
 data = f.readline().split()
@@ -32,23 +32,12 @@ def f3(s, i, r, beta, gama):
     return gama * i
 
 def g(beta, gama):
-    S = np.zeros(int(T / dt) +1)
-    I = np.zeros(int(T / dt) + 1)
-    R = np.zeros(int(T / dt) + 1)
-    result = np.zeros(T)
-    
-    S[0] = N -1
-    I[0] = 1
-    t = 0
-    for i in range(int(T / dt)):
-        t += dt
-        S[i + 1] = S[i] + f1(S[i], I[i], R[i], beta, gama) * dt
-        I[i + 1] = I[i] + f2(S[i], I[i], R[i], beta, gama) * dt
-        R[i + 1] = R[i] + f3(S[i], I[i], R[i], beta, gama) * dt
-        if i % int(1 / dt) == 0:
-            z = i // int(1 / dt) 
-            result[z] = I[i + 1] + result[z - 1 if z > 0 else 0] 
-    return result 
+    size = int(T/dt)
+    result = sir.sir(size, beta, gama, N, dt)
+    answer = result[:T]
+    sir.free_memory(result)
+    print(answer[1:10])
+    return answer 
 
 
 
