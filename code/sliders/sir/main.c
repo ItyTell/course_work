@@ -3,6 +3,7 @@
 
 
 float* sir(int size, float beta, float gama, int N, float dt){
+
     float* S = malloc(size * sizeof(float));
     float* I = malloc(size * sizeof(float));
     float* R = malloc(size * sizeof(float));
@@ -15,7 +16,7 @@ float* sir(int size, float beta, float gama, int N, float dt){
 
     int step = (int)(1 / dt);
 
-    float sum = 0;
+    float sum = 1;
 
     for (int i = 0; i < size - 1; i++){
         S[i + 1] = S[i] - beta * S[i] * I[i] * dt / N; 
@@ -24,7 +25,6 @@ float* sir(int size, float beta, float gama, int N, float dt){
         sum += I[i + 1];
         if(i%step == 0){
             answer[(int)(i/step)] = sum;
-            printf("%f\n", sum);
         }
     }
 

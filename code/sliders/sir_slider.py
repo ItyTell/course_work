@@ -11,7 +11,7 @@ from ctypes import c_float, c_int, POINTER
 
 sir = ctypes.CDLL("C:\\Users\\nickk\\course_work\\code\\sliders\\sir\\sir.so")
 sir.sir.argtypes = [c_int, c_float, c_float, c_int, c_float]
-sir.sir.restype = POINTER(c_int)
+sir.sir.restype = POINTER(c_float)
 
 f = open("data.txt")
 data = f.readline().split()
@@ -36,7 +36,6 @@ def g(beta, gama):
     result = sir.sir(size, beta, gama, N, dt)
     answer = result[:T]
     sir.free_memory(result)
-    print(answer[1:10])
     return answer 
 
 
