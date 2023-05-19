@@ -2,6 +2,7 @@
 from matplotlib.widgets import Slider, Button
 import matplotlib.pyplot as plt
 import numpy as np
+import json
 
 class Param():
 
@@ -29,6 +30,7 @@ class Graph():
         self.N = N
         self.inits = []
         self.save = Button(self.fig.add_axes([0.6, 0.025, 0.1, 0.04]), 'Save', hovercolor='0.975')
+        self.load = Button(self.fig.add_axes([0.7, 0.025, 0.1, 0.04]), 'Load', hovercolor='0.975')
         self.reset = Button(self.fig.add_axes([0.8, 0.025, 0.1, 0.04]), 'Reset', hovercolor='0.975')
     
     def add_parametr(self, label, init_val, min, max):
@@ -37,11 +39,19 @@ class Graph():
         self.n += 1
     
     def save_params(self, event):
-        name = "sir"
-        file = open("C:\\Users\\nickk\\course_work\\code\\sliders\\"+ name +"_params.txt", 'w')
-        for slider in Param.sliders:
-            file.write(slider.name + " " + str(slider.slider.val) + "\n")
-        file.close()
+        data ={}
+        for param in self.params:
+            data[param.name] = param.slider.val
+        with open("C:\\Users\\nickk\\course_work\\code\\sliders\\"+ self.name +"_params.json", 'w') as file:
+            json.dump(data, file, indent= 3)
+
+    def load_params(self, event):
+        with open("C:\\Users\\nickk\\course_work\\code\\sliders\\"+ self.name +"_params.json") as file:
+            file_content = file.read()
+            file_content = json.loads(file_content)
+        for i, value in enumerate(file_content.values()):
+            self.params[i].slider.set_val(value)
+
 
     def reset(self, event):
         for param in self.params:
@@ -73,6 +83,7 @@ class Graph():
         self.fig.subplots_adjust(bottom=0.5)
 
         self.save.on_clicked(self.save_params)
+        self.load.on_clicked(self.load_params)
         self.reset.on_clicked(self.reset)
         for param in self.params:
             param.slider.on_changed(self.update)
