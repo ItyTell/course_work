@@ -31,7 +31,7 @@ class Graph():
         self.inits = []
         self.save = Button(self.fig.add_axes([0.6, 0.025, 0.1, 0.04]), 'Save', hovercolor='0.975')
         self.load = Button(self.fig.add_axes([0.7, 0.025, 0.1, 0.04]), 'Load', hovercolor='0.975')
-        self.reset = Button(self.fig.add_axes([0.8, 0.025, 0.1, 0.04]), 'Reset', hovercolor='0.975')
+        self.rest = Button(self.fig.add_axes([0.8, 0.025, 0.1, 0.04]), 'Reset', hovercolor='0.975')
     
     def add_parametr(self, label, init_val, min, max):
         self.params.append(Param(self.fig, label, init_val, min, max, self.n))
@@ -79,12 +79,12 @@ class Graph():
         self.line, = self.ax.plot(self.t, self.function(*self.inits), lw=2)
 
         self.ax.set_xlabel('Time [d]')
-        #plt.ylim(0, self.N / 2)
+        plt.ylim(0, self.N / 2)
         self.fig.subplots_adjust(bottom=0.5)
 
         self.save.on_clicked(self.save_params)
         self.load.on_clicked(self.load_params)
-        self.reset.on_clicked(self.reset)
+        self.rest.on_clicked(self.reset)
         for param in self.params:
             param.slider.on_changed(self.update)
         plt.show()
