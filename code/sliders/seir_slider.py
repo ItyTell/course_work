@@ -7,16 +7,6 @@ from datetime import datetime
 from matplotlib.widgets import Slider, Button
 from slider import *
 
-
-
-
-f = open("data.txt")
-data = f.readline().split()
-for i in range(len(data)):
-    data[i] = int(data[i])
-
-
-
 T = 1151
 dt = 0.1
 N = 647601
@@ -56,62 +46,15 @@ def g(beta, a, gama):
 
 
 
-t = np.array([i for i in range(T)])
-
 init_beta = 0.224
 init_a = 3
 init_gama = 0.212
 
-fig, ax = plt.subplots()
-line, = ax.plot(t, g(init_beta, init_a ,init_gama), lw=2)
-ax.plot(t, data, color='r')
-ax.set_xlabel('Time [d]')
-plt.ylim(0, N / 2)
+graph = Graph("seir", g, T, N)
 
-fig.subplots_adjust(bottom=0.5)
+graph.add_parametr("beta", init_beta, 0, 1)
+graph.add_parametr("a", init_a, 0, 3)
+graph.add_parametr("gama", init_gama, 0, 1)
 
-beta = Param(fig, 'beta', init_beta, 0, 1)
+graph.preset()
 
-a =          Param(fig, 'a', init_a, 0, 3)
-
-gama = Param(fig, 'gama', init_gama, 0, 1)
-
-
-# The function to be called anytime a slider's value changes
-def update(val):
-    line.set_ydata(g(beta.slider.val, a.slider.val, gama.slider.val))
-    fig.canvas.draw_idle()
-
-
-for slider in Param.sliders:
-    slider.slider.on_changed(update)
-
-resetax = fig.add_axes([0.8, 0.025, 0.1, 0.04])
-button = Button(resetax, 'Reset', hovercolor='0.975')
-
-def reset(event):
-    for slider in Param.sliders:
-        slider.slider.reset()
-
-
-
-button.on_clicked(reset)
-
-
-saveax = fig.add_axes([0.6, 0.025, 0.1, 0.04])
-sve = Button(saveax, 'Save', hovercolor='0.975')
-
-def save_params(event):
-    name = "seir"
-    file = open("C:\\Users\\nickk\\course_work\\code\\sliders\\"+ name +"_params.txt", 'w')
-    for slider in Param.sliders:
-        file.write(slider.name + " " + str(slider.slider.val) + "\n")
-    file.close()
-
-sve.on_clicked(save_params)
-
-
-
-
-
-plt.show()
