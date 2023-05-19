@@ -74,12 +74,12 @@ class Graph():
 
         self.t = np.array([i for i in range(self.T)])
 
+        self.ax.plot(self.t, data, color='r')
+
         self.line, = self.ax.plot(self.t, self.function(*self.inits), lw=2)
 
-
-        self.ax.plot(self.t, data, color='r')
         self.ax.set_xlabel('Time [d]')
-        plt.ylim(0, self.N / 2)
+        #plt.ylim(0, self.N / 2)
         self.fig.subplots_adjust(bottom=0.5)
 
         self.save.on_clicked(self.save_params)
