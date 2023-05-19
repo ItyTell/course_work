@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <mem.h>
 
 
 float* seipr(int size, float beta, float beta1, float p1, float a, float gama, int N, float dt){
