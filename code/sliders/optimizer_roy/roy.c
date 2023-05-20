@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+float diff(float* data1, float* data2, int t){
+    float sum = 0;
+    for (int i = 0; i < t; i++){sum+= (data1[i] - data2[i]) * (data1[i] - data2[i]);}
+    return sum;
+}
 
 float** malloc2d(int dim1, int dim2){
     float** array = (float**)malloc(dim1*sizeof(float*));
@@ -27,11 +32,13 @@ int min_index(float* a, int size){
 
 
 
-float* roy(float (*func)(float*), float* A, float* B, float eps, int n, int N, int iteration, float w, float a1, float a2){
+float* roy(float (*func)(float*, float*, float*), float* A, float* B, float eps, int n, int N, int iteration, float w, float a1, float a2, float* b1, float* constants, float* data){
     float** X = malloc2d(N, n);
     float** V = malloc2d(N, n);
     float** P = malloc2d(N, n);
     float* res = malloc(N * sizeof(float));
+    float* b = malloc(n);
+    float* new_res = malloc(N * sizeof(float));
 
 
     for (int i = 0; i < N; i++){
@@ -41,11 +48,11 @@ float* roy(float (*func)(float*), float* A, float* B, float eps, int n, int N, i
             V[i][j] = rnd(-eps, eps);
         }
     }
-    for (int i = 0; i < N; i++){res[i] = func(P[i]);}
+    for (int i = 0; i < n; i++){X[0][i] = b1[i]; P[0][i] = b1[i];}
+    for (int i = 0; i < N; i++){res[i] = func(P[i], constants, data);}
 
     int m = min_index(res, N);
-    float* b = P[m];
-    float* new_res = malloc(N * sizeof(float));
+    b = P[m];
 
     for (int i = 0; i < N; i++){
         for (int j = 0; j < n; j++){
@@ -55,10 +62,10 @@ float* roy(float (*func)(float*), float* A, float* B, float eps, int n, int N, i
     
     for (int k = 0; k < iteration; k++){
         for(int i = 0; i < N; i++){
-            new_res[i] = func(X[i]);
+            new_res[i] = func(X[i], constants, data);
             if (new_res[i] < res[i]){res[i] = new_res[i]; P[i] = X[i];}
         }
-        m = min(res, N);
+        m = min_index(res, N);
         b = P[m];
         for (int i = 0; i < N; i++){
             for (int j = 0; j < n; j++){
@@ -71,6 +78,15 @@ float* roy(float (*func)(float*), float* A, float* B, float eps, int n, int N, i
         w = 0.4 + 0.5 / (k + 1);
     }
 
+    free(res);
+    free(new_res);
+    free2d(X, N);
+    free2d(V, N);
+    free2d(P, N);
+
     return b;
 
 }
+
+
+void free_mem(float* b){free(b);}

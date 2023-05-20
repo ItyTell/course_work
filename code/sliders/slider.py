@@ -32,6 +32,7 @@ class Graph():
         self.save = Button(self.fig.add_axes([0.6, 0.025, 0.1, 0.04]), 'Save', hovercolor='0.975')
         self.load = Button(self.fig.add_axes([0.7, 0.025, 0.1, 0.04]), 'Load', hovercolor='0.975')
         self.rest = Button(self.fig.add_axes([0.8, 0.025, 0.1, 0.04]), 'Reset', hovercolor='0.975')
+        self.optimize = Button(self.fig.add_axes([0.5, 0.025, 0.1, 0.04]), 'Optimize', hovercolor='0.975')
     
     def add_parametr(self, label, init_val, min, max):
         self.params.append(Param(self.fig, label, init_val, min, max, self.n))
@@ -64,6 +65,8 @@ class Graph():
         self.line.set_ydata(self.function(*values))
         self.fig.canvas.draw_idle()
 
+    def optimizing(self, event):
+        pass
     
     def preset(self):
         file = open("data.txt")
@@ -85,6 +88,7 @@ class Graph():
         self.save.on_clicked(self.save_params)
         self.load.on_clicked(self.load_params)
         self.rest.on_clicked(self.reset)
+        self.optimize.on_clicked(self.optimizing)
         for param in self.params:
             param.slider.on_changed(self.update)
         plt.show()
