@@ -1,7 +1,8 @@
 \chapter{SIR модель}
-Є декілька найбільш розповсюджених математичних моделей для моделювання епідемій (та загалом інфекційних захворювань).
-Спочатку розглянемо найрозповсюджені з них, а вже в другому розділі
-створимо свою модель для COVID-19.
+В першому розгляді розглянемо SIR-подібні моделі. Почнемо з базової 
+SIR моделі і поступово будемо ускладнювати модель шляхом додавання
+нових груп, що дозволить поступово наблизити модель до реалій протікання
+хвороби.
 
 \section{SIR модель}
 \par Одною з найпростіших моделей є SIR модель. 
@@ -32,7 +33,7 @@
     \label{SIR graph}
 \end{risunok}
 
-Зв’язок між цими групами записують за допомогою системи диференціальних рівняннь (див рівняння \ref{SIR}).
+Зв’язок між цими групами записують за допомогою системи диференціальних рівняннь 
 
 \begin{equation}
     \begin{cases}
@@ -41,7 +42,6 @@
         \frac{dR}{dt} = \gamma I
     \end{cases}
 \end{equation}
-\label{SIR}
 
 
 Перше рівняння описує,
@@ -88,7 +88,7 @@
     \label{SIER graph}
 \end{risunok}
 
-У вихідну систему додається додаткове рівняння (див рівняння \ref{SEIR})
+У вихідну систему додається додаткове рівняння
 
 \begin{equation}
     \begin{cases}
@@ -98,7 +98,6 @@
         \frac{dR}{dt} = \gamma I
     \end{cases}
 \end{equation}
-\label{SEIR}
 
 E(t) функція кількості заражених, коефіцієнт а відповідає оберненому середньому періоду переходу людини від зараженої, до повноцінного інфікованого.
 Так само населення залишається незмінним: $ N = S + E + I + R $.
@@ -144,7 +143,7 @@ E(t) функція кількості заражених, коефіцієнт 
     \label{SEI graph}
 \end{risunok}
 
-Отже і система буде складатись з меншої кількості рівняннь. (див рівняння \ref{SEIS})
+Отже і система буде складатись з меншої кількості рівняннь.
 
 \begin{equation}
     \begin{cases}
@@ -153,8 +152,6 @@ E(t) функція кількості заражених, коефіцієнт 
         \frac{dI}{dt} = aE - \gamma I                  \\
     \end{cases}
 \end{equation}
-\label{SEIS}
-
 
 \section{SEIPR}
 
@@ -167,7 +164,6 @@ E(t) функція кількості заражених, коефіцієнт 
     \frac{d R}{d t}=\gamma_i(I+P)\\
     \end{array}\right.
 \end{equation}
-\label{SEIPR}
 
 
 
@@ -185,6 +181,23 @@ E(t) функція кількості заражених, коефіцієнт 
 \end{equation}
 \label{SEIAPR}
 
+\section{SEIPHR}
+
+\section{SEIPHRD}
+
+\begin{equation}
+    \left\{\begin{array}{l}
+    \frac{d S}{d t}=-\beta \frac{I}{N} S-l \beta \frac{H}{N} S-\beta^{\prime} \frac{P}{N} S, \\
+    \frac{d E}{d t}=\beta \frac{I}{N} S+l \beta \frac{H}{N} S+\beta^{\prime} \frac{P}{N} S- a E, \\
+    \frac{d I}{d t}= a \rho_1 E-\left(\gamma_a+\gamma_i\right) I-\delta_i I, \\
+    \frac{d P}{d t}= a\rho_2 E-\left(\gamma_a+\gamma_i\right) P-\delta_p P, \\
+    \frac{d A}{d t}= a\left(1-\rho_1-\rho_2\right) E, \\
+    \frac{d H}{d t}=\gamma_a(I+P)-\gamma_r H-\delta_h H, \\
+    \frac{d R}{d t}=\gamma_i(I+P)+\gamma_r H, \\
+    \frac{d F}{d t}=\delta_i I+\delta_p P+\delta_h H,
+    \end{array}\right.
+\end{equation}
+\label{Model 1}
 
 \section{Смертність}
 
