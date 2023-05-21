@@ -73,7 +73,7 @@ class Graph():
     def optimizing(self, event):
         n = len(self.params)
         N = 50
-        iteration = 10
+        iteration = 100
         w = 0.9
         a1 = 1.5
         a2 = 1.7
