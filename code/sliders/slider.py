@@ -76,6 +76,7 @@ class Graph():
         B = [param.slider.valmax for param in self.params]
         first = [param.slider.val for param in self.params]
         new_val = roy(self.diff, n = len(self.params), N = 50, iteration = 100, w = 0.9, a1 = 1.5, a2 = 1.7, A = A, B = B, eps = 0.01, first = first)
+        print(self.diff(new_val))
         self.set_params(new_val)
     
     def load_file(self):
