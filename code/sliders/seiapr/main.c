@@ -2,12 +2,13 @@
 #include <stdlib.h>
 
 
-float* seipr(int size, float beta, float beta1, float p1, float a, float gama, int N, float dt){
+float* seiapr(int size, float beta, float beta1, float p1, float p2, float a, float gama, int N, float dt){
 
     float* S = malloc(size * sizeof(float));
     float* E = malloc(size * sizeof(float));
     float* I = malloc(size * sizeof(float));
     float* P = malloc(size * sizeof(float));
+    float* A = malloc(size * sizeof(float));
     float* R = malloc(size * sizeof(float));
     float* answer = malloc((int)(size*dt) * sizeof(float));
 
@@ -15,6 +16,7 @@ float* seipr(int size, float beta, float beta1, float p1, float a, float gama, i
     E[0] = 0;
     I[0] = 1;
     P[0] = 0;
+    A[0] = 0;
     R[0] = 0;
     answer[0] = 1;
 
@@ -26,7 +28,8 @@ float* seipr(int size, float beta, float beta1, float p1, float a, float gama, i
         S[i + 1] = S[i] - beta * S[i] * I[i] * dt / N - beta1 * S[i] * P[i] * dt / N; 
         E[i + 1] = E[i] + (beta * S[i] * I[i] / N + beta1 * S[i] * P[i] * dt / N - a * E[i]) * dt;
         I[i + 1] = I[i] + (a * p1 * E[i] - gama * I[i]) * dt;
-        P[i + 1] = P[i] + (a * (1 - p1) * E[i] - gama * P[i]) * dt;
+        P[i + 1] = P[i] + (a * p2 * E[i] - gama * P[i]) * dt;
+        A[i + 1] = A[i] + a * (1 - p1 - p2) * E[i] * dt;
         R[i + 1] = R[i] + gama * (I[i] + P[i]) * dt;
         sum += I[i + 1] + P[i + 1];
         if(i%step == 0){
@@ -38,6 +41,7 @@ float* seipr(int size, float beta, float beta1, float p1, float a, float gama, i
     free(E);
     free(I);
     free(P);
+    free(A);
     free(R);
     return answer;
 }

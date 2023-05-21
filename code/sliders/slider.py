@@ -1,15 +1,16 @@
-
-from matplotlib.widgets import Slider, Button
-import matplotlib.pyplot as plt
 import numpy as np
 import json
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider, Button
+
+# my files
 from optimizer_roy import *
+
 
 class Param():
 
-
     def __init__(self, fig, label, init_val, min, max, n) -> None:
-        self.ax = fig.add_axes([0.1, 0.4 - n * 0.05, 0.8, 0.02])
+        self.ax = fig.add_axes([0.1, 0.4 - n * 0.03, 0.8, 0.02])
         self.slider = Slider(
                             ax=self.ax,
                             label=label,
@@ -17,7 +18,7 @@ class Param():
                             valmax=max,
                             valinit=init_val)
         self.name = label
-    
+
 
 class Graph():
 
@@ -58,7 +59,6 @@ class Graph():
             file_content = json.loads(file_content)
             self.set_params(list(file_content.values()))
         file.close()
-
 
     def update(self, event):
         values = []
@@ -107,6 +107,4 @@ class Graph():
         self.load_file()
         self.drew()
         self.buttons()
-
-
 
