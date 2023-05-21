@@ -3,6 +3,7 @@ from matplotlib.widgets import Slider, Button
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+from optimizer_roy import *
 
 class Param():
 
@@ -64,20 +65,38 @@ class Graph():
             values.append(param.slider.val)
         self.line.set_ydata(self.function(*values))
         self.fig.canvas.draw_idle()
+    
+    def diff(self, params):
+        values = (param for param in params )
+        return np.sum((np.array(self.function(*values)) - self.data)**2)
 
     def optimizing(self, event):
-        pass
+        n = len(self.params)
+        N = 50
+        iteration = 10
+        w = 0.9
+        a1 = 1.5
+        a2 = 1.7
+        A = [param.slider.valmin for param in self.params]
+        B = [param.slider.valmax for param in self.params]
+        eps = 0.01
+        first = [param.slider.val for param in self.params]
+        new_val = roy(self.diff, n, N, iteration, w, a1, a2, A, B, eps, first)
+        for i in range(len(self.params)):
+            self.params[i].slider.set_val(new_val[i])
+
     
     def preset(self):
         file = open("data.txt")
-        data = file.readline().split()
-        for i in range(len(data)):
-            data[i] = int(data[i])
+        self.data = file.readline().split()
+        for i in range(len(self.data)):
+            self.data[i] = int(self.data[i])
         file.close()
+        self.data = np.array(self.data)
 
         self.t = np.array([i for i in range(self.T)])
 
-        self.ax.plot(self.t, data, color='r')
+        self.ax.plot(self.t, self.data, color='r')
 
         self.line, = self.ax.plot(self.t, self.function(*self.inits), lw=2)
 
