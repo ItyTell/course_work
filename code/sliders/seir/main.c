@@ -25,7 +25,7 @@ float* seir(int size, float beta, float a, float gama, int N, float dt){
         E[i + 1] = E[i] + (beta * S[i] * I[i] / N - a * E[i]) * dt;
         I[i + 1] = I[i] + (a * E[i] - gama * I[i]) * dt;
         R[i + 1] = R[i] + gama * I[i] * dt;
-        sum += I[i + 1];
+        sum += a * E[i] * dt;
         if(i%step == 0){
             answer[(int)(i/step)] = sum;
         }

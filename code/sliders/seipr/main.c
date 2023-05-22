@@ -28,7 +28,7 @@ float* seipr(int size, float beta, float beta1, float p1, float a, float gama, i
         I[i + 1] = I[i] + (a * p1 * E[i] - gama * I[i]) * dt;
         P[i + 1] = P[i] + (a * (1 - p1) * E[i] - gama * P[i]) * dt;
         R[i + 1] = R[i] + gama * (I[i] + P[i]) * dt;
-        sum += I[i + 1] + P[i + 1];
+        sum += a * p1 * E[i] * dt + a * (1 - p1) * E[i] * dt;
         if(i%step == 0){
             answer[(int)(i/step)] = sum;
         }

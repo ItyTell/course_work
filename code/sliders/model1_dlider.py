@@ -13,7 +13,7 @@ model1.model1.argtypes = [
         c_float, c_float, c_float, c_float, c_float, c_float, 
         c_float, c_float, c_float, c_float, c_float, c_float, 
         c_int, c_float]
-model1.model1.restype = POINTER(c_float)
+model1.model1.restype = POINTER(POINTER(c_float))
 
 
 
@@ -28,9 +28,11 @@ def g(beta, beta1, l, p1, p2, a, gama_a, gama_i, gama_r, sigma_i, sigma_p,
     size = int(T/dt)
     result = model1.model1(size, beta, beta1, l, p1, p2, a, 
             gama_a, gama_i, gama_r, sigma_i, sigma_p, sigma_h, N, dt)
-    answer = result[:T]
+    answer = result[0][:T]
+    H = result[1][:T]
+    F = result[2][:T]
     model1.free_memory(result)
-    return answer 
+    return answer, H, F 
 
 
 init_beta = 0.224
@@ -42,9 +44,9 @@ init_a = 3
 init_gama_a = 0.212
 init_gama_i = 0.212
 init_gama_r = 0.212
-init_sigma_i = 0.212
-init_sigma_p = 0.212
-init_sigma_h = 0.212
+init_sigma_i = 0.001
+init_sigma_p = 0.001
+init_sigma_h = 0.001
 
 
 graph = Graph("model1", g, T, N)

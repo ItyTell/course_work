@@ -23,7 +23,7 @@ class Param():
 class Graph():
 
     def __init__(self, name, f, T, N) -> None:
-        self.fig, self.ax = plt.subplots(1, 3)
+        self.fig, self.ax = plt.subplots(1, 2)
         self.n = 0
         self.params = []
         self.name = name
@@ -64,12 +64,16 @@ class Graph():
         values = []
         for param in self.params:
             values.append(param.slider.val)
-        self.line.set_ydata(self.function(*values))
-        self.fig[0].canvas.draw_idle()
+        
+        I, H, F = self.function(*values)
+        self.line_inf.set_ydata(I)
+        self.line_death.set_ydata(F)
+        self.fig.canvas.draw_idle()
     
     def diff(self, params):
         values = (param for param in params )
-        return np.sum((np.array(self.function(*values)) - self.data)**2)
+        I, H, F = self.function(*values)
+        return np.sum((np.array(I) - self.data)**2) #+ np.sum((np.array(F) - self.deaths)**2) 
 
     def optimizing(self, event):
         A = [param.slider.valmin for param in self.params]
@@ -86,12 +90,30 @@ class Graph():
             self.data[i] = int(self.data[i])
         file.close()
         self.data = np.array(self.data)
-    
+        
+        file = open(r"C:\Users\nickk\course_work\code\deaths.txt")
+        self.deaths = file.readline().split()
+        for i in range(len(self.deaths)):
+            self.deaths[i] = int(self.deaths[i])
+        file.close()
+        self.deaths = np.array(self.deaths)
+
     def drew(self):
         self.t = np.array([i for i in range(self.T)])
+        I, H, F = self.function(*self.inits)
+
+        self.line_inf, = self.ax[0].plot(self.t, I, lw=2)
+        self.line_death, = self.ax[1].plot(self.t, F, lw=2)
+
+
         self.ax[0].plot(self.t, self.data, color='r')
-        self.line, = self.ax[0].plot(self.t, self.function(*self.inits), lw=2)
         self.ax[0].set_xlabel('Time [d]')
+        self.ax[0].set_title("I")
+
+        self.ax[1].plot(self.t, self.deaths, color='r')
+        self.ax[1].set_xlabel('Time [d]')
+        self.ax[1].set_title("D")
+
         plt.ylim(0, self.N / 2)
         self.fig.subplots_adjust(bottom=0.5)
     

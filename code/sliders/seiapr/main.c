@@ -31,7 +31,7 @@ float* seiapr(int size, float beta, float beta1, float p1, float p2, float a, fl
         P[i + 1] = P[i] + (a * p2 * E[i] - gama * P[i]) * dt;
         A[i + 1] = A[i] + a * (1 - p1 - p2) * E[i] * dt;
         R[i + 1] = R[i] + gama * (I[i] + P[i]) * dt;
-        sum += I[i + 1] + P[i + 1];
+        sum += a * (p1 + p2) * E[i] * dt;
         if(i%step == 0){
             answer[(int)(i/step)] = sum;
         }
