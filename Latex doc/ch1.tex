@@ -35,13 +35,13 @@ SIR моделі і поступово будемо ускладнювати м�
 
 Зв’язок між цими групами записують за допомогою системи диференціальних рівняннь 
 
-\begin{equation}
+\begin{equation*}
     \begin{cases}
         \frac{dS}{dt} = - \frac{\beta}{N}SI          \\
         \frac{dI}{dt} = \frac{\beta}{N}SI - \gamma I \\
         \frac{dR}{dt} = \gamma I
     \end{cases}
-\end{equation}
+\end{equation*}
 
 
 Перше рівняння описує,
@@ -90,14 +90,14 @@ SIR моделі і поступово будемо ускладнювати м�
 
 У вихідну систему додається додаткове рівняння
 
-\begin{equation}
+\begin{equation*}
     \begin{cases}
         \frac{dS}{dt} = - \frac{\beta}{N}SI    \\
         \frac{dE}{dt} = \frac{\beta}{N}SI - aE \\
         \frac{dI}{dt} = aE - \gamma I          \\
         \frac{dR}{dt} = \gamma I
     \end{cases}
-\end{equation}
+\end{equation*}
 
 E(t) функція кількості заражених, коефіцієнт а відповідає оберненому середньому періоду переходу людини від зараженої, до повноцінного інфікованого.
 Так само населення залишається незмінним: $ N = S + E + I + R $.
@@ -145,17 +145,17 @@ E(t) функція кількості заражених, коефіцієнт 
 
 Отже і система буде складатись з меншої кількості рівняннь.
 
-\begin{equation}
+\begin{equation*}
     \begin{cases}
         \frac{dS}{dt} = - \frac{\beta}{N}SI + \gamma I \\
         \frac{dE}{dt} = \frac{\beta}{N}SI - aE         \\
         \frac{dI}{dt} = aE - \gamma I                  \\
     \end{cases}
-\end{equation}
+\end{equation*}
 
 \section{SEIPR}
 
-\begin{equation}
+\begin{equation*}
     \left\{\begin{array}{l}
     \frac{d S}{d t}=-\beta \frac{I}{N} S-\beta^{\prime} \frac{P}{N} S, \\
     \frac{d E}{d t}=\beta \frac{I}{N} S+\beta^{\prime} \frac{P}{N} S-\kappa E, \\
@@ -163,13 +163,13 @@ E(t) функція кількості заражених, коефіцієнт 
     \frac{d P}{d t}=\kappa (1 - \rho_1) E-\gamma_i P, \\
     \frac{d R}{d t}=\gamma_i(I+P)\\
     \end{array}\right.
-\end{equation}
+\end{equation*}
 
 
 
 
 \section{SEIAPR}
-\begin{equation}
+\begin{equation*}
     \left\{\begin{array}{l}
     \frac{d S}{d t}=-\beta \frac{I}{N} S-\beta^{\prime} \frac{P}{N} S, \\
     \frac{d E}{d t}=\beta \frac{I}{N} S +\beta^{\prime} \frac{P}{N} S- aE, \\
@@ -178,14 +178,13 @@ E(t) функція кількості заражених, коефіцієнт 
     \frac{d A}{d t}= a\left(1-\rho_1-\rho_2\right) E, \\
     \frac{d R}{d t}=\gamma(I+P)\\
     \end{array}\right.
-\end{equation}
-\label{SEIAPR}
+\end{equation*}
 
 \section{SEIPHR}
 
 \section{SEIPHRD}
 
-\begin{equation}
+\begin{equation*}
     \left\{\begin{array}{l}
     \frac{d S}{d t}=-\beta \frac{I}{N} S-l \beta \frac{H}{N} S-\beta^{\prime} \frac{P}{N} S, \\
     \frac{d E}{d t}=\beta \frac{I}{N} S+l \beta \frac{H}{N} S+\beta^{\prime} \frac{P}{N} S- a E, \\
@@ -196,33 +195,30 @@ E(t) функція кількості заражених, коефіцієнт 
     \frac{d R}{d t}=\gamma_i(I+P)+\gamma_r H, \\
     \frac{d F}{d t}=\delta_i I+\delta_p P+\delta_h H,
     \end{array}\right.
-\end{equation}
-\label{Model 1}
+\end{equation*}
 
 \section{Смертність}
 
 Якщо зробити припущення, що людина у кожній групі може померти з ймовірністю $\mu$, то кожна група буде зменшуватися на добуток $\mu$ та популяцію цієї групи. 
 В таких моделях також додають до розгляду новонароджених. Якщо припустити, 
 що у середньому народжуваність за момент часу $dt$ дорівнює $\Lambda$, 
-одержемо нуву систему рівняннь. (див рівняння \ref{SIR with mortality})  
+одержемо нуву систему рівняннь.  
 
 
-\begin{equation}
+\begin{equation*}
     \begin{cases}
         \frac{dS}{dt} = \Lambda -  \mu S - \frac{\beta}{N}SI  \\
         \frac{dI}{dt} = \frac{\beta}{N}SI - \gamma I -  \mu I \\
         \frac{dR}{dt} = \gamma I -  \mu R
     \end{cases}
-\end{equation}
-\label{SIR with mortality}
+\end{equation*}
 
 
-У даній моделі населення вже буде змінюватись. (див рівняння \ref{Population})
+У даній моделі населення вже буде змінюватись.
 
-\begin{equation}
+\begin{equation*}
     \frac{dN(t)}{dt} = \Lambda - \mu N(t) = \Lambda - \mu (S(t) + I(t) + R(t))
-\end{equation}
-\label{Population}
+\end{equation*}
 
 
 Іноді для спрощення встановлюють $ \Lambda = \mu $ - за таких значень 
@@ -234,12 +230,11 @@ E(t) функція кількості заражених, коефіцієнт 
 \section{SIR-подібні моделі з вакцинацією}
 
 
-\begin{equation}
+\begin{equation*}
     \begin{cases}
         \frac{dS}{dt} = v N (1 - P) - \frac{\beta}{N}SI          \\
         \frac{dI}{dt} = \frac{\beta}{N}SI - \gamma I \\
         \frac{dR}{dt} = \gamma I \\
         \frac{dV}{dt} = v N P
     \end{cases}
-\end{equation}
-\label{SIR vaccinaton}
+\end{equation*}
