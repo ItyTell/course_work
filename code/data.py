@@ -10,9 +10,9 @@ df = file.parse("Sheet1")
 
 
 
-f = open(r"C:\Users\nickk\course_work\code\data.txt", "w")
+f = open(r"C:\Users\nickk\course_work\code\hosp_patients.txt", "w")
 s = ""
-for data in df["total_cases"]:
+for data in df["hosp_patients"]:
     s += str(data) + "\n"
 
 f.write(s)
