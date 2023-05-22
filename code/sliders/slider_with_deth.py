@@ -23,7 +23,7 @@ class Param():
 class Graph():
 
     def __init__(self, name, f, T, N) -> None:
-        self.fig, self.ax = plt.subplots()
+        self.fig, self.ax = plt.subplots(1, 3)
         self.n = 0
         self.params = []
         self.name = name
@@ -65,7 +65,7 @@ class Graph():
         for param in self.params:
             values.append(param.slider.val)
         self.line.set_ydata(self.function(*values))
-        self.fig.canvas.draw_idle()
+        self.fig[0].canvas.draw_idle()
     
     def diff(self, params):
         values = (param for param in params )
@@ -89,9 +89,9 @@ class Graph():
     
     def drew(self):
         self.t = np.array([i for i in range(self.T)])
-        self.ax.plot(self.t, self.data, color='r')
-        self.line, = self.ax.plot(self.t, self.function(*self.inits), lw=2)
-        self.ax.set_xlabel('Time [d]')
+        self.ax[0].plot(self.t, self.data, color='r')
+        self.line, = self.ax[0].plot(self.t, self.function(*self.inits), lw=2)
+        self.ax[0].set_xlabel('Time [d]')
         plt.ylim(0, self.N / 2)
         self.fig.subplots_adjust(bottom=0.5)
     

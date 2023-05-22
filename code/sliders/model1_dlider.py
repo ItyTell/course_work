@@ -1,6 +1,6 @@
 import ctypes
 from ctypes import c_float, c_int, POINTER
-from slider import *
+from slider_with_deth import *
 
 
 name = "model1"

@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+float func(float a){
+    if (a > 0){return a;}
+    else return 0;
+}
 
 float* sir(int size, float beta, float gama, int N, float dt){
 
@@ -22,7 +26,7 @@ float* sir(int size, float beta, float gama, int N, float dt){
         S[i + 1] = S[i] - beta * S[i] * I[i] * dt / N; 
         I[i + 1] = I[i] + (beta * S[i] * I[i] / N - gama * I[i]) * dt;
         R[i + 1] = R[i] + gama * I[i] * dt;
-        sum += I[i + 1];
+        sum +=I[i + 1];
         if(i%step == 0){
             answer[(int)(i/step)] = sum;
         }
