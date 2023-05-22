@@ -11,7 +11,7 @@
 \titleformat{\chapter}{\fontsize{18}{14}\bfseries\center\MakeUppercase}{РОЗДІЛ \thechapter}{0.5em}{}
 \titleformat{\section}{\fontsize{14}{14}\bfseries}{\thesection}{0.5em}{}
 
-\titleformat{\subsection}{\fontsize{14}{14}\bfseries}{\thesection}{0.5em}{}
+\titleformat{\subsection}{\fontsize{14}{14}\bfseries}{\thesubsection}{0.5em}{}
     
 \geometry{left = 3cm, right = 1.5cm, top = 2cm, bottom = 2cm}
 \renewcommand {\baselinestretch} {1.25}
@@ -41,11 +41,13 @@
 
     \tableofcontents
 
-    \include{ch0.tex}
+    \include{ch0}
 
-    \include{ch1.tex}
+    \include{ch1}
 
-    \include{ch2.tex}
+    \include{ch2}
+
+    \include{ch3}
 
     \bibliographystyle{plain}
 
