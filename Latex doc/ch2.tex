@@ -182,42 +182,32 @@ $$\Delta x_{k + 1}^{(i)} = \alpha \Delta x_k^{(i)} +
 $x_{best}$ найкраще значення всіх частинок. 
 
 
-Загальна схема алгоритму виглядає так: 
+Моя реалізація на мові Python:
+
 \begin{lstlisting}[language=Python, caption=Python example]
-    def roy(f, n, N, iteration, w, a1, a2, A, B, eps, first):
-        #ініціалізація частинок на множині пошуку
+    def roy(f, n, N, iteration, w, 
+    a1, a2, A, B, eps, first):
         X = np.array([[random.uniform(A[i], B[i]) 
-                        for i in range(n)] for j in range(N)])
-        #ініціалізація швидкості частинок мелими значеннями
-        V = np.array([[random.uniform(-eps, eps) for i in range(n)] 
-                        for j in range(N)])
-        #якщо вже було знайдене непогане значення то одна з 
-        # частинок ініцііалізовується цими значеннями
+        for i in range(n)] for j in range(N)])
+        V = np.array([[random.uniform(-eps, eps) 
+        for i in range(n)] 
+        for j in range(N)])
         for i in range(n):
             X[0][i] = first[i]
-        # ініціалізація найкращих значень кожної частинки
         P = np.copy(X)
-        #розрахунок функції на значинях частинки
         res = np.array([f(X[i]) for i in range(N)])
-        #вибір глобального оптимуму (накйращої частинки)
         b = P[np.argmin(res)]
-        # основний цикл алгоритму з візуалізацією
         for i in tqdm(range(iteration)):
-            # розрахунок дельта х
-            V = w * V + a1 * random.random() * (P - X) + 
+            V = w * V + 
+            a1 * random.random() * (P - X) + 
             a2 * random.random() * (b - X)
-            # нові значення частинок 
             X = X + V
-            # розрахунок функції на значеннях частинок та вибір
-            # найкращих значень частинок
             for j in range(N):
                 res1 = f(X[j])
                 if res1 < res[j]:
                     P[j] = X[j]
                     res[j] = res1
-            # оновлення найкращої частинки
             b = P[np.argmin(res)]
-        # повернення результату
         return b
 \end{lstlisting}
 

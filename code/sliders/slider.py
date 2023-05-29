@@ -22,7 +22,7 @@ class Param():
 
 class Graph():
 
-    def __init__(self, name, f, T, N) -> None:
+    def __init__(self, name, f, T, T1, N) -> None:
         self.fig, self.ax = plt.subplots()
         self.n = 0
         self.params = []
@@ -31,6 +31,7 @@ class Graph():
         self.T = T
         self.N = N
         self.inits = []
+        self.T1 = T1
         self.save = Button(self.fig.add_axes([0.6, 0.025, 0.1, 0.04]), 'Save', hovercolor='0.975')
         self.load = Button(self.fig.add_axes([0.7, 0.025, 0.1, 0.04]), 'Load', hovercolor='0.975')
         self.optimize = Button(self.fig.add_axes([0.5, 0.025, 0.1, 0.04]), 'Optimize', hovercolor='0.975')
@@ -69,7 +70,7 @@ class Graph():
     
     def diff(self, params):
         values = (param for param in params )
-        return np.sum((np.array(self.function(*values)) - self.data)**2)
+        return np.sum((np.array(self.function(*values))[:self.T] - self.data[:self.T])**2)
 
     def optimizing(self, event):
         A = [param.slider.valmin for param in self.params]
@@ -88,9 +89,9 @@ class Graph():
         self.data = np.array(self.data)
     
     def drew(self):
-        self.t = np.array([i for i in range(self.T)])
-        self.ax.plot(self.t, self.data, color='r')
-        self.line, = self.ax.plot(self.t, self.function(*self.inits), lw=2)
+        self.t = np.array([i for i in range(self.T + self.T1)])
+        self.ax.plot(self.t, self.data[:self.T + self.T1], color='r')
+        self.line, = self.ax.plot(self.t, self.function(*self.inits)[: self.T + self.T1], lw=2)
         self.ax.set_xlabel('Time [d]')
         plt.ylim(0, self.N / 2)
         self.fig.subplots_adjust(bottom=0.5)
