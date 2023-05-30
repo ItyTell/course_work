@@ -70,7 +70,8 @@ class Graph():
     
     def diff(self, params):
         values = (param for param in params )
-        return np.sum((np.array(self.function(*values))[:self.T] - self.data[:self.T])**2)
+        res = np.array(self.function(*values))[:self.T]
+        return np.sum((res - self.data[:self.T])**2) + (res[-1] - self.data[-1])**2 * 0.5 
 
     def optimizing(self, event):
         A = [param.slider.valmin for param in self.params]
@@ -93,7 +94,8 @@ class Graph():
         self.ax.plot(self.t, self.data[:self.T + self.T1], color='r')
         self.line, = self.ax.plot(self.t, self.function(*self.inits)[: self.T + self.T1], lw=2)
         self.ax.set_xlabel('Time [d]')
-        plt.ylim(0, self.N / 2)
+        plt.axvline(x = self.T, color = 'black')
+        plt.ylim(0, 2* self.N / 3)
         self.fig.subplots_adjust(bottom=0.5)
     
     def buttons(self):

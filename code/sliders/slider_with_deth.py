@@ -22,13 +22,14 @@ class Param():
 
 class Graph():
 
-    def __init__(self, name, f, T, N) -> None:
+    def __init__(self, name, f, T, T1, N) -> None:
         self.fig, self.ax = plt.subplots(1, 2)
         self.n = 0
         self.params = []
         self.name = name
         self.function = f
         self.T = T
+        self.T1 = T1
         self.N = N
         self.inits = []
         self.save = Button(self.fig.add_axes([0.6, 0.025, 0.1, 0.04]), 'Save', hovercolor='0.975')
@@ -73,7 +74,7 @@ class Graph():
     def diff(self, params):
         values = (param for param in params )
         I, H, F = self.function(*values)
-        return np.sum((np.array(I) - self.data)**2) #+ np.sum((np.array(F) - self.deaths)**2) 
+        return np.sum((np.array(I[:self.T]) - self.data[:self.T])**2) #+ np.sum((np.array(F) - self.deaths)**2) 
 
     def optimizing(self, event):
         A = [param.slider.valmin for param in self.params]
@@ -99,18 +100,18 @@ class Graph():
         self.deaths = np.array(self.deaths)
 
     def drew(self):
-        self.t = np.array([i for i in range(self.T)])
+        self.t = np.array([i for i in range(self.T + self.T1)])
         I, H, F = self.function(*self.inits)
 
-        self.line_inf, = self.ax[0].plot(self.t, I, lw=2)
-        self.line_death, = self.ax[1].plot(self.t, F, lw=2)
+        self.line_inf, = self.ax[0].plot(self.t, I[:self.T + self.T1], lw=2)
+        self.line_death, = self.ax[1].plot(self.t, F[:self.T + self.T1], lw=2)
 
 
-        self.ax[0].plot(self.t, self.data, color='r')
+        self.ax[0].plot(self.t, self.data[:self.T+self.T1], color='r')
         self.ax[0].set_xlabel('Time [d]')
         self.ax[0].set_title("I")
 
-        self.ax[1].plot(self.t, self.deaths, color='r')
+        self.ax[1].plot(self.t, self.deaths[:self.T + self.T1], color='r')
         self.ax[1].set_xlabel('Time [d]')
         self.ax[1].set_title("D")
 

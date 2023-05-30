@@ -6,7 +6,7 @@ sir = ctypes.CDLL("C:\\Users\\nickk\\course_work\\code\\sliders\\sir\\sir.so")
 sir.sir.argtypes = [c_int, c_float, c_float, c_int, c_float]
 sir.sir.restype = POINTER(c_float)
 
-T = 50
+T = 100
 T1 = 20
 dt = 0.1
 N = 647601
