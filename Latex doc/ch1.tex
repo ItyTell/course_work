@@ -102,13 +102,14 @@ SIR моделі і поступово будемо ускладнювати м�
 E(t) функція кількості заражених, коефіцієнт а відповідає оберненому середньому періоду переходу людини від зараженої, до повноцінного інфікованого.
 Так само населення залишається незмінним: $ N = S + E + I + R $.
 
-Подіюні прийоми застосовують для більш точного моделювання відповідно до
+Подібні прийоми застосовують для більш точного моделювання відповідно до
 протікання хвороби - часто є певний період під час якого інфікований, 
 ще не заражає оточуючих або заражає з меншим шансом, більш тісним контаком, 
 або період до проявів перших симптомів і початком домашньої ізоляції,
 носіння маски. 
-Все це впливає на парамтри та рівняння моделі і на точність резульата. 
-Буде складніше підібрати вірні параметри, але це може позетивно вплинути на точність.
+Це впливає на параметри та рівняння моделі і на точність резульата. 
+Для даної моделі буде складніше підібрати вірні параметри, 
+але це може позетивно вплинути на точність.
 
 \section{SEI модель}
 
@@ -124,16 +125,16 @@ E(t) функція кількості заражених, коефіцієнт 
         [style={rectangle, draw=green!60, fill=green!5, very thick}]
         (Susceptible){Susceptible}; 
         \node
-        [style={rectangle, draw=red!60, fill=red!5, very thick}]
-        (Infectious)[right=of Susceptible]{Infectious};
+        [style={rectangle, draw=yellow!60, fill=yellow!5, very thick}]
+        (Exposed)[right=of Susceptible]{Exposed};
         \node
-        [style={rectangle, draw=blue!60, fill=blue!5, very thick}]
-        (Removed)[right=of Infectious]{Removed};
+        [style={rectangle, draw=red!60, fill=red!5, very thick}]
+        (Infectious)[right=of Exposed]{Infectious};
         \draw[->, style={very thick}] (Susceptible.east)
-        to node[above] {$ \frac{\beta}{N} $} (Infectious.west);
-        \draw[->, style={very thick}] (Infectious.east)
-        to node[above] {$  a $} (Removed.west);
-        \draw[->, style={very thick}] (Removed.north)
+        to node[above] {$ \frac{\beta}{N} $} (Exposed.west);
+        \draw[->, style={very thick}] (Exposed.east)
+        to node[above] {$  a $} (Infectious.west);
+        \draw[->, style={very thick}] (Infectious.north)
         .. controls +(up:10mm) and +(up:10mm) .. 
         node[above] {$ \gamma $}
         (Susceptible.north);
@@ -155,34 +156,240 @@ E(t) функція кількості заражених, коефіцієнт 
 
 \section{SEIPR}
 
+Додамо нову групу інфікованих, яка заражає здорових людей з більшою 
+чи меншою ймовірністю ніж звичайні інфіковані. 
+
+\begin{risunok}[ht]
+    \centering
+    \begin{tikzpicture}
+        \node at (-1, 0)
+        [style={rectangle, draw=green!60, fill=green!5, very thick}]
+        (Susceptible){Susceptible}; 
+        \node
+        [style={rectangle, draw=yellow!60, fill=yellow!5, very thick}]
+        (Exposed)[right=of Susceptible, xshift = 5mm]{Exposed};
+        \node
+        [style={rectangle, draw=red!60, fill=red!5, very thick}]
+        (Infectious)[right=of Exposed, xshift = 21mm, yshift= 18mm]
+        {Infectious};
+        \node
+        [style={rectangle, draw=red!80, fill=red!8, very thick}]
+        (Super-spreaders)[right=of Exposed, xshift = 15mm, yshift= -18mm]
+        {Super-spreaders};
+        \node 
+        [style={rectangle, draw=blue!60, fill=red!5, very thick}]
+        (Removed)[above=of Super-spreaders]{Removed};
+        \draw[->, style={very thick}] (Susceptible.east)
+        to node[above] {$ \frac{\beta}{N} + \frac{\beta_1}{N} $} 
+        (Exposed.west);
+        \draw[->, style={very thick}] (Exposed.east)
+        to node[above] {$  a p_1 $} (Infectious.west);
+        \draw[->, style={very thick}] (Exposed.east)
+        to node[below, xshift = -7mm] {$  a (1 - p_1) $} 
+        (Super-spreaders.west);
+        \draw[->, style={very thick}] (Infectious.south)
+        to node[left] {$  \gamma_i $} 
+        (Removed.north);
+        \draw[->, style={very thick}] (Super-spreaders.north)
+        to node[left] {$  \gamma_p $} 
+        (Removed.south);
+    \end{tikzpicture}
+    \vspace{0.5cm}
+    \caption{Схема роботи SEIPR моделі}
+    \label{SEIPR graph}
+\end{risunok}
+
+
+
+Тоді кожен заражений може стати або звичайним інфікованим з 
+ймовірністю $p_1$ або іншим інфікованим з ймовірністю 
+$1 - p_1$. Параметр, що відповідає за інфікування 
+інших інфікованих $\beta_1$. Для спрощення моделі часто припускають, 
+що ці дві групи інфікованих мають однакову ймовірність одужати і беруть 
+однакові коефіцієнти $\gamma_i = \gamma_p = \gamma$, але загальна 
+система виглядає так: 
+
+
 \begin{equation*}
     \left\{\begin{array}{l}
     \frac{d S}{d t}=-\beta \frac{I}{N} S-\beta^{\prime} \frac{P}{N} S, \\
     \frac{d E}{d t}=\beta \frac{I}{N} S+\beta^{\prime} \frac{P}{N} S-\kappa E, \\
     \frac{d I}{d t}=\kappa \rho_1 E-\gamma_i I, \\
-    \frac{d P}{d t}=\kappa (1 - \rho_1) E-\gamma_i P, \\
-    \frac{d R}{d t}=\gamma_i(I+P)\\
+    \frac{d P}{d t}=\kappa (1 - \rho_1) E-\gamma_p P, \\
+    \frac{d R}{d t}=\gamma_i I + \gamma_p P\\
     \end{array}\right.
 \end{equation*}
-
 
 
 
 \section{SEIAPR}
+
+
+Додамо групу людей, які заражені проте не мають ніяких симптомів і не 
+можуть заражати інших. 
+
+\begin{risunok}[ht]
+    \centering
+    \begin{tikzpicture}
+        \node at (-1, 0)
+        [style={rectangle, draw=green!60, fill=green!5, very thick}]
+        (Susceptible){Susceptible}; 
+        \node
+        [style={rectangle, draw=yellow!60, fill=yellow!5, very thick}]
+        (Exposed)[right=of Susceptible, xshift = 5mm]{Exposed};
+        \node
+        [style={rectangle, draw=red!60, fill=red!5, very thick}]
+        (Infectious)[right=of Exposed, xshift = 21mm, yshift= 18mm]
+        {Infectious};
+        \node 
+        [style={rectangle, draw=orange!60, fill=orange!5, very thick}]
+        (Asymptomatic)[below=of Exposed]
+        {Asymptomatic};
+        \node
+        [style={rectangle, draw=red!80, fill=red!8, very thick}]
+        (Super-spreaders)[right=of Exposed, xshift = 15mm, yshift= -18mm]
+        {Super-spreaders};
+        \node 
+        [style={rectangle, draw=blue!60, fill=red!5, very thick}]
+        (Removed)[above=of Super-spreaders]{Removed};
+        \draw[->, style={very thick}] (Susceptible.east)
+        to node[above] {$ \frac{\beta}{N} + \frac{\beta_1}{N} $} 
+        (Exposed.west);
+        \draw[->, style={very thick}] (Exposed.east)
+        to node[above] {$  a p_1 $} (Infectious.west);
+        \draw[->, style={very thick}] (Exposed.east)
+        to node[below, xshift = -2mm] {$  a p_2 $} 
+        (Super-spreaders.west);
+        \draw[->, style={very thick}] (Infectious.south)
+        to node[left] {$  \gamma_i $} 
+        (Removed.north);
+        \draw[->, style={very thick}] (Super-spreaders.north)
+        to node[left] {$  \gamma_p $} 
+        (Removed.south);
+        \draw[->, style={very thick}] (Exposed.south)
+        to node[left] {$  a(1 - p_1 - p_2) $} 
+        (Asymptomatic.north);
+    \end{tikzpicture}
+    \vspace{0.5cm}
+    \caption{Схема роботи SEIAPR моделі}
+    \label{SEIAPR graph}
+\end{risunok}
+
+
+
+В данному випадку нас не цікавить чи вилікуються вони
+чи ні адже вони впливають на систему так само як і виліковані. Тоді кожен 
+заражений з категорії $E$ з ймовірністю $p_1$ зможе стати зараженим $I$ 
+з ймовірністю $p_2$ може стати зараженим $P$ і з ймовірністю $1 - p_1 - p_2$
+може стати зараженим $A$. 
 \begin{equation*}
     \left\{\begin{array}{l}
     \frac{d S}{d t}=-\beta \frac{I}{N} S-\beta^{\prime} \frac{P}{N} S, \\
     \frac{d E}{d t}=\beta \frac{I}{N} S +\beta^{\prime} \frac{P}{N} S- aE, \\
-    \frac{d I}{d t}= a \rho_1 E-\gamma I, \\
-    \frac{d P}{d t}= a \rho_2 E-\gamma P, \\
+    \frac{d I}{d t}= a \rho_1 E-\gamma_i I, \\
+    \frac{d P}{d t}= a \rho_2 E-\gamma_p P, \\
     \frac{d A}{d t}= a\left(1-\rho_1-\rho_2\right) E, \\
-    \frac{d R}{d t}=\gamma(I+P)\\
+    \frac{d R}{d t}=\gamma_i I + \gamma_p P\\
     \end{array}\right.
 \end{equation*}
 
-\section{SEIPHR}
-
 \section{SEIPHRD}
+
+
+Остання модель була взята з статті. Тут додані дві нові групи 
+H- госпіталізовані та F- летальні випадки. Це допоможе нам конфігурувати 
+моделі адже подібні дані дуже часто зберігаються і вони є більш точними 
+ніж кількість інфікованих. 
+
+\begin{risunok}[ht]
+    \centering
+    \begin{tikzpicture}
+        \node at (-1, 0)
+        [style={rectangle, draw=green!60, fill=green!5, very thick}]
+        (Susceptible){Susceptible}; 
+        \node
+        [style={rectangle, draw=yellow!60, fill=yellow!5, very thick}]
+        (Exposed)[right=of Susceptible, xshift = 5mm]{Exposed};
+        \node
+        [style={rectangle, draw=red!60, fill=red!5, very thick}]
+        (Infectious)[right=of Exposed, xshift = 21mm, yshift= 18mm]
+        {Infectious};
+        \node 
+        [style={rectangle, draw=orange!60, fill=orange!5, very thick}]
+        (Asymptomatic)[below=of Exposed]
+        {Asymptomatic};
+        \node
+        [style={rectangle, draw=red!80, fill=red!8, very thick}]
+        (Super-spreaders)[right=of Exposed, xshift = 15mm, yshift= -18mm]
+        {Super-spreaders};
+        \node 
+        [style={rectangle, draw=blue!60, fill=red!5, very thick}]
+        (Removed)[above=of Super-spreaders]{Removed};
+
+        \node
+        [style={rectangle, draw=green!60, fill=green!5, very thick}]
+        (Hospitalize)[right=of Infectious, xshift = 6mm]
+        {Hospitalize};
+
+        \node
+        [style={rectangle, draw=black!60, fill=black!5, very thick}]
+        (Fatal)[right=of Super-spreaders, xshift= 12mm]{Fatal};
+
+        \draw[->, style={very thick}] (Susceptible.east)
+        to node[above] {$ \frac{\beta}{N} + \frac{\beta_1}{N} $} 
+        (Exposed.west);
+        \draw[->, style={very thick}] (Exposed.east)
+        to node[above] {$  a p_1 $} (Infectious.west);
+        \draw[->, style={very thick}] (Exposed.east)
+        to node[below, xshift = -2mm] {$  a p_2 $} 
+        (Super-spreaders.west);
+        \draw[->, style={very thick}] (Infectious.south)
+        to node[left] {$  \gamma_i $} 
+        (Removed.north);
+        \draw[->, style={very thick}] (Super-spreaders.north)
+        to node[left] {$  \gamma_p $} 
+        (Removed.south);
+        \draw[->, style={very thick}] (Exposed.south)
+        to node[left] {$  a(1 - p_1 - p_2) $} 
+        (Asymptomatic.north);
+
+        \draw[->, style={very thick}] (Infectious.east)
+        to node[below, xshift = 1mm] {$  \gamma_a $} 
+        (Hospitalize.west);
+
+        \draw[->, style={very thick}] (Hospitalize.east)
+        .. controls +(down:40mm) and +(left:50mm) .. 
+        node[below] {$ \gamma_a $}
+        (Super-spreaders.south);
+
+        \draw[->, style={very thick}] (Hospitalize.west)
+        to node[above, xshift = -7mm, yshift = -7mm] {$  \gamma_r $} 
+        (Removed.east);
+
+        \draw[->, style={very thick}] (Infectious.east)
+        to node[below, xshift = 5mm, yshift = -7mm] {$  \sigma_i $} 
+        (Fatal.west);
+
+        \draw[->, style={very thick}] (Super-spreaders.east)
+        to node[below] {$  \sigma_p $} 
+        (Fatal.west);
+
+        \draw[->, style={very thick}] (Hospitalize.south)
+        to node[above, xshift= 4mm] {$  \sigma_h $} 
+        (Fatal.north);
+
+    \end{tikzpicture}
+    \vspace{0.5cm}
+    \caption{Схема роботи SEIAPHRF моделі}
+    \label{SEIAPHRF graph}
+\end{risunok}
+
+
+
+
+За смерть різниї груп відповідають параметри 
+$\sigma_i, \sigma_p, \sigma_h$, а за госпіталізацію параметр
+$\gamma_a$. 
 
 \begin{equation*}
     \left\{\begin{array}{l}
@@ -195,46 +402,4 @@ E(t) функція кількості заражених, коефіцієнт 
     \frac{d R}{d t}=\gamma_i(I+P)+\gamma_r H, \\
     \frac{d F}{d t}=\delta_i I+\delta_p P+\delta_h H,
     \end{array}\right.
-\end{equation*}
-
-\section{Смертність}
-
-Якщо зробити припущення, що людина у кожній групі може померти з ймовірністю $\mu$, то кожна група буде зменшуватися на добуток $\mu$ та популяцію цієї групи. 
-В таких моделях також додають до розгляду новонароджених. Якщо припустити, 
-що у середньому народжуваність за момент часу $dt$ дорівнює $\Lambda$, 
-одержемо нуву систему рівняннь.  
-
-
-\begin{equation*}
-    \begin{cases}
-        \frac{dS}{dt} = \Lambda -  \mu S - \frac{\beta}{N}SI  \\
-        \frac{dI}{dt} = \frac{\beta}{N}SI - \gamma I -  \mu I \\
-        \frac{dR}{dt} = \gamma I -  \mu R
-    \end{cases}
-\end{equation*}
-
-
-У даній моделі населення вже буде змінюватись.
-
-\begin{equation*}
-    \frac{dN(t)}{dt} = \Lambda - \mu N(t) = \Lambda - \mu (S(t) + I(t) + R(t))
-\end{equation*}
-
-
-Іноді для спрощення встановлюють $ \Lambda = \mu $ - за таких значень 
-населення не змінюється, проте трохи збільшується потенціал інфікування (з приростом нового покоління у категорію здорових)
-
-
-
-
-\section{SIR-подібні моделі з вакцинацією}
-
-
-\begin{equation*}
-    \begin{cases}
-        \frac{dS}{dt} = v N (1 - P) - \frac{\beta}{N}SI          \\
-        \frac{dI}{dt} = \frac{\beta}{N}SI - \gamma I \\
-        \frac{dR}{dt} = \gamma I \\
-        \frac{dV}{dt} = v N P
-    \end{cases}
 \end{equation*}
