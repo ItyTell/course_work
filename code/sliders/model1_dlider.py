@@ -19,7 +19,7 @@ model1.model1.restype = POINTER(POINTER(c_float))
 
 
 
-T = 200
+T = 365
 T1 = 20
 dt = 0.1
 N = 647601

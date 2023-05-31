@@ -6,15 +6,16 @@ seiapr = ctypes.CDLL("C:\\Users\\nickk\\course_work\\code\\sliders\\seiapr\\seia
 seiapr.seiapr.argtypes = [c_int, c_float, c_float, c_float, c_float, c_float, c_float, c_int, c_float]
 seiapr.seiapr.restype = POINTER(c_float)
 
-T = 1151
+T = 365
+T1 = 20
 dt = 0.1
 N = 647601
 
 
 def g(beta, beta1, p1, p2, a, gama):
-    size = int(T/dt)
+    size = int((T + T1)/dt)
     result = seiapr.seiapr(size, beta, beta1, p1, p2, a, gama, N, dt)
-    answer = result[:T]
+    answer = result[:T + T1]
     seiapr.free_memory(result)
     return answer 
 
@@ -28,7 +29,7 @@ init_a = 3
 init_gama = 0.212
 
 
-graph = Graph("seiapr", g, T, N)
+graph = Graph("seiapr", g, T, T1, N)
 
 graph.add_parametr("beta", init_beta, 0, 1)
 graph.add_parametr("beta1", init_beta1, 0, 1)
