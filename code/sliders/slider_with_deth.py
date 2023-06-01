@@ -76,12 +76,19 @@ class Graph():
         I, H, F = self.function(*values)
         return np.sum((np.array(I[:self.T]) - self.data[:self.T])**2) #+ np.sum((np.array(F) - self.deaths)**2) 
 
+    def prognoz(self, params):
+        values = (param for param in params )
+        I, H, F = self.function(*values)
+        res = np.array(I)[self.T:self.T1 + self.T]
+        return np.sum((res - self.data[self.T:self.T + self.T1])**2)
+    
     def optimizing(self, event):
         A = [param.slider.valmin for param in self.params]
         B = [param.slider.valmax for param in self.params]
         first = [param.slider.val for param in self.params]
         new_val = roy(self.diff, n = len(self.params), N = 50, iteration = 100, w = 0.9, a1 = 1.5, a2 = 1.7, A = A, B = B, eps = 0.01, first = first)
         print(self.diff(new_val))
+        print("prognoz =", self.prognoz(new_val))
         self.set_params(new_val)
     
     def load_file(self):

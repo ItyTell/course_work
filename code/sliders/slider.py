@@ -72,6 +72,12 @@ class Graph():
         values = (param for param in params )
         res = np.array(self.function(*values))[:self.T]
         return np.sum((res - self.data[:self.T])**2) + (res[-1] - self.data[-1])**2 * 0.5 
+    
+    def prognoz(self, params):
+        values = (param for param in params )
+        res = np.array(self.function(*values))[self.T:self.T1 + self.T]
+        return np.sum((res - self.data[self.T:self.T + self.T1])**2)
+
 
     def optimizing(self, event):
         A = [param.slider.valmin for param in self.params]
@@ -79,6 +85,7 @@ class Graph():
         first = [param.slider.val for param in self.params]
         new_val = roy(self.diff, n = len(self.params), N = 100, iteration = 100, w = 0.9, a1 = 1.5, a2 = 1.7, A = A, B = B, eps = 0.01, first = first)
         print(self.diff(new_val))
+        print("prognoz =", self.prognoz(new_val))
         self.set_params(new_val)
     
     def load_file(self):
