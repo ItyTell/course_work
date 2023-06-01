@@ -355,13 +355,13 @@ H- госпіталізовані та F- летальні випадки. Це 
         (Asymptomatic.north);
 
         \draw[->, style={very thick}] (Infectious.east)
-        to node[below, xshift = 1mm] {$  \gamma_a $} 
+        .. controls +(up:5mm) and +(up:5mm) .. 
+        node[above] {$  \gamma_a $} 
         (Hospitalize.west);
 
-        \draw[->, style={very thick}] (Hospitalize.east)
-        .. controls +(down:40mm) and +(left:50mm) .. 
-        node[below] {$ \gamma_a $}
-        (Super-spreaders.south);
+        \draw[->, style={very thick}] (Super-spreaders.north)
+        to node[below, xshift =-2mm, yshift = -2mm] {$ \gamma_a $}
+        (Hospitalize.south);
 
         \draw[->, style={very thick}] (Hospitalize.west)
         to node[above, xshift = -7mm, yshift = -7mm] {$  \gamma_r $} 
