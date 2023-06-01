@@ -30,7 +30,7 @@ $$\frac{dS}{dt} = f(t, S) \Rightarrow
 S_{n+1} = S_n + f(t_n, S_n)$$
 
 Ітерації починаються при відомому $S_0$. Метод є не стабільним при великому 
-кроці $dt$.
+кроці $dt$.\cite{iserles_first_1996,autar_textbook_nodate}
 
 Як приклад візьмемо SIR модель при розв'язанні моделі отримаємо:
 
@@ -67,7 +67,8 @@ $$
 Ідеологічно методи Рунге Кутті це алгоритми влучного застосування методу 
 Ейлера певну кількість разів. Від кількості разів, яку він застосовується 
 залежить порядок методу. Наприклад класичним методом Рунге Кутті називають 
-саме метод четвертого порядку. 
+саме метод четвертого порядку.
+\cite{iserles_first_1996,autar_textbook_nodate}
 
 
 Нехай у нас є система диференціальних рівняннь $\frac{dx}{dt} = f(x, t)$.
@@ -180,11 +181,12 @@ $$\Delta x_{k + 1}^{(i)} = \alpha \Delta x_k^{(i)} +
 
 У формулі $x_{best}^{(i)}$ найкраще значення цієї частинки, 
 $x_{best}$ найкраще значення всіх частинок. 
+\cite{martins_engineering_2021}
 
 
 Моя реалізація на мові Python:
 
-\begin{lstlisting}[language=Python, caption=Python example]
+\begin{lstlisting}[style=Cstyle, language=Python]
     def roy(f, n, N, iteration, w, 
     a1, a2, A, B, eps, first):
         X = np.array([[random.uniform(A[i], B[i]) 
