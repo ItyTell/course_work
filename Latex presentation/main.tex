@@ -1,11 +1,51 @@
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Copenhagen}
+\usecolortheme{beaver}
+
+\setbeamertemplate{navigation symbols}{}
 
 \input{packages.tex}
 \input{config.tex}
 
+\title{Моделювання розвитку епiдемiї
+з використанням чисельних методiв}
+
+\author{Коломієць Микола}
+
+\date{Червень 2023}
+
 \begin{document}
-    \begin{frame}
+    \maketitle
+    \begin{frame}{SIR Модель}
+        \centering
+        \only<1>{
+        \begin{tikzpicture}
+            \node
+            [style={rectangle, draw=green!60, fill=green!5, very thick}]
+            (Susceptible){Susceptible}; 
+            \node
+            [style={rectangle, draw=red!60, fill=red!5, very thick}]
+            (Infectious)[right=of Susceptible]{Infectious};
+            \node
+            [style={rectangle, draw=blue!60, fill=blue!5, very thick}]
+            (Removed)[right=of Infectious]{Removed};
+            \draw[->, style={very thick}] (Susceptible.east)
+            to node[above] {$ \frac{\beta}{N} $} (Infectious.west);
+            \draw[->, style={very thick}] (Infectious.east)
+            to node[above] {$  \gamma $} (Removed.west);
+        \end{tikzpicture}}
+
         
+        \begin{block}<2>{Рівняння}
+            \begin{equation*}
+                \begin{cases}
+                    \frac{dS}{dt} = - \frac{\beta}{N}SI          \\
+                    \frac{dI}{dt} = \frac{\beta}{N}SI - \gamma I \\
+                    \frac{dR}{dt} = \gamma I
+                \end{cases}
+            \end{equation*}
+        \end{block}
+
     \end{frame}
 \end{document}
 
